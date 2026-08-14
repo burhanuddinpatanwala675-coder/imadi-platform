@@ -16,6 +16,20 @@ vi.mock('@prisma/client', () => ({
 }));
 
 describe('public form contracts', () => {
+    it('answers the cross-origin contact preflight request', async () => {
+        const { app } = await import('../src/app.js');
+        const request = (await import('supertest')).default;
+        const response = await request(app)
+            .options('/api/contact')
+            .set('Origin', 'http://localhost:3000')
+            .set('Access-Control-Request-Method', 'POST')
+            .set('Access-Control-Request-Headers', 'content-type');
+
+        expect(response.status).toBe(204);
+        expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000');
+        expect(response.headers['access-control-allow-methods']).toContain('POST');
+    });
+
     it('requires a complete contact request', async () => {
         const { app } = await import('../src/app.js');
         const request = (await import('supertest')).default;

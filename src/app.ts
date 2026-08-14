@@ -73,15 +73,19 @@ app.use(
     })
 );
 
-app.use(
-    cors({
-        origin: origins,
-        credentials: true,
-        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        optionsSuccessStatus: 204,
-    })
-);
+const corsOptions = {
+    origin: origins,
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 204,
+};
+
+// Handle browser preflight requests before parsing a body or applying rate
+// limits. This is especially important when the static Netlify site calls the
+// API on a different origin.
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json({ limit: '8mb' }));
 app.use(cookieParser());
