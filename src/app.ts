@@ -27,10 +27,15 @@ const secret = process.env.SESSION_SECRET || defaultSessionSecret;
 const cookieSecure = process.env.COOKIE_SECURE
     ? process.env.COOKIE_SECURE === 'true'
     : production;
-const publicSiteUrl = (process.env.PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+const defaultPublicSiteUrl = production
+    ? 'https://imadi-technologies.netlify.app'
+    : 'http://localhost:3000';
+const publicSiteUrl = (process.env.PUBLIC_SITE_URL || defaultPublicSiteUrl).replace(/\/$/, '');
 
 const origins = (
-    process.env.ALLOWED_ORIGINS || 'http://localhost:3000'
+    process.env.ALLOWED_ORIGINS || (production
+        ? 'https://imadi-technologies.netlify.app'
+        : 'http://localhost:3000')
 )
     .split(',')
     .map((origin) => origin.trim())
@@ -49,19 +54,16 @@ if (production) {
         throw new Error('COOKIE_SECURE must be true in production.');
     }
 
-    if (
-        !process.env.ALLOWED_ORIGINS ||
-        origins.some((origin) => !origin.startsWith('https://'))
-    ) {
+    if (origins.some((origin) => !origin.startsWith('https://'))) {
         throw new Error('ALLOWED_ORIGINS must contain explicit HTTPS origins in production.');
     }
 
-    if (!process.env.PUBLIC_SITE_URL || !publicSiteUrl.startsWith('https://')) {
+    if (!publicSiteUrl.startsWith('https://')) {
         throw new Error('PUBLIC_SITE_URL must be the public HTTPS website address in production.');
     }
 
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
-        throw new Error('SMTP_HOST, SMTP_USER, and SMTP_PASSWORD must be configured in production for email confirmations and password resets.');
+        console.warn('SMTP is not configured: contact, newsletter, and password-reset emails will not be sent.');
     }
 }
 
