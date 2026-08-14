@@ -1,0 +1,13 @@
+.nav .brand,
+.footer-grid .brand {
+  display: block;
+  width: 142px;
+  height: 58px;
+  background: url("assets/imadi-technologies-logo.png") center / contain no-repeat;
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 0 !important;
+}
+
+.nav .brand small,
+.footer-grid .brand small { display: none !important; }

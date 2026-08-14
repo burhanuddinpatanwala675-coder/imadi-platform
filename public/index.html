@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Imadi Technologies builds practical, secure technology systems that help organisations move forward.">
+    <meta name="theme-color" content="#07111f">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Imadi Technologies | Intelligent technology, made practical.">
+    <meta property="og:description" content="Practical, secure technology systems for ambitious organisations.">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Imadi Technologies","url":"https://imadi.example","email":"hello@imadi.example","description":"Practical, secure technology systems for ambitious organisations."}</script>
+    <title>Imadi Technologies | Intelligent technology, made practical.</title>
+    <link rel="stylesheet" href="site.css">
+    <style>
+        .home-hero {
+            min-height: 660px;
+            display: grid;
+            align-items: center;
+            padding: 96px 0 72px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .home-hero::before {
+            content: "";
+            position: absolute;
+            width: 620px;
+            height: 620px;
+            border-radius: 50%;
+            right: -180px;
+            top: -75px;
+            background: radial-gradient(circle, rgba(55, 221, 247, .16), rgba(135, 102, 255, .06) 42%, transparent 68%);
+            pointer-events: none;
+        }
+
+        .home-hero .wrap {
+            position: relative;
+        }
+
+        .home-hero h1 {
+            max-width: 850px;
+            margin: 16px 0 22px;
+            font: 700 clamp(3.3rem, 7.2vw, 7rem)/.93 var(--display);
+            letter-spacing: -.075em;
+        }
+
+        .home-hero h1 span {
+            color: var(--cyan);
+        }
+
+        .home-hero p {
+            max-width: 600px;
+            margin: 0;
+            color: #b8c6d8;
+            font-size: 1.1rem;
+        }
+
+        .home-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .home-signal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 56px;
+            color: var(--muted);
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .home-signal::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 16px var(--green);
+        }
+
+        .capabilities {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .capabilities .card {
+            min-height: 252px;
+        }
+
+        .capabilities .card h3 {
+            margin-top: 22px;
+        }
+
+        .home-note {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 45px;
+            align-items: center;
+        }
+
+        .home-note h2 {
+            margin-top: 12px;
+        }
+
+        .home-note p {
+            color: var(--muted);
+            max-width: 570px;
+        }
+
+        .principles {
+            display: grid;
+            gap: 12px;
+        }
+
+        .principle {
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: 15px;
+            background: rgba(13, 28, 48, .42);
+        }
+
+        .principle strong {
+            display: block;
+            font: 700 1rem var(--display);
+        }
+
+        .principle span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: .86rem;
+        }
+
+        .home-cta {
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+
+        .home-cta h2 {
+            margin: 7px 0 0;
+            font: 700 clamp(1.8rem, 3.3vw, 3.1rem)/1.02 var(--display);
+            letter-spacing: -.05em;
+        }
+
+        @media (max-width: 760px) {
+            .home-hero {
+                min-height: auto;
+                padding: 100px 0 72px;
+            }
+
+            .capabilities,
+            .home-note {
+                grid-template-columns: 1fr;
+            }
+
+            .home-cta {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="nav">
+        <div class="wrap navin">
+            <a class="brand" href="index.html" aria-label="Imadi Technologies home">IMADI<small>TECHNOLOGIES</small></a>
+            <nav class="navlinks" aria-label="Main navigation">
+                <a href="index.html" aria-current="page">Home</a>
+                <a href="solutions.html">Solutions</a>
+                <a href="expertise.html">Expertise</a>
+                <a href="process.html">Process</a>
+                <a href="insights.html">Insights</a>
+                <a href="case-studies.html">Case studies</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <a class="btn primary call" href="contact.html">Contact us</a>
+            <button class="menu" aria-label="Toggle menu" aria-expanded="false">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="home-hero">
+            <div class="wrap reveal">
+                <div class="eyebrow">Technology, made practical</div>
+                <h1>Build the systems that <span>move your business forward.</span></h1>
+                <p>Imadi brings together technology, product thinking, and engineering to create secure digital systems
+                    that solve meaningful problems.</p>
+                <div class="home-actions">
+                    <a class="btn primary" href="contact.html">Start a conversation</a>
+                    <a class="btn" href="solutions.html">Explore our work</a>
+                </div>
+                <div class="home-signal">Practical systems for ambitious teams</div>
+            </div>
+        </section>
+
+            <section class="section">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div class="eyebrow">What we build</div>
+                    <h2>Technology with a clear purpose.</h2>
+                    <p>We focus on the systems that remove friction, make better decisions possible, and help teams do
+                        more of their best work.</p>
+                </div>
+                <div class="grid capabilities">
+                    <a class="card reveal" href="solutions.html">
+                        <div class="icon">✦</div>
+                        <h3>Intelligent automation</h3>
+                        <p>Useful AI and automation that streamline work without adding complexity.</p>
+                        <span class="arrow">Explore solutions →</span>
+                    </a>
+                    <a class="card reveal" href="solutions.html">
+                        <div class="icon">◇</div>
+                        <h3>Digital products</h3>
+                        <p>Tailored platforms, applications, and experiences designed around the way you operate.</p>
+                        <span class="arrow">Explore solutions →</span>
+                    </a>
+                    <a class="card reveal" href="solutions.html">
+                        <div class="icon">◌</div>
+                        <h3>Reliable foundations</h3>
+                        <p>Cloud, data, integration, and security work that gives everything else room to grow.</p>
+                        <span class="arrow">Explore solutions →</span>
+                    </a>
+                </div>
+            </div>
+            </section>
+            <section class="section" id="newsletter">
+                <div class="wrap card newsletter-card reveal">
+                    <div><div class="eyebrow">Stay in the loop</div><h2>Useful technology thinking, occasionally.</h2><p>Get practical ideas and new Imadi insights. No spam, and you can opt out at any time.</p></div>
+                    <form id="newsletter-form" class="newsletter-form" novalidate>
+                        <label class="sr-only" for="newsletter-name">First name</label><input id="newsletter-name" name="firstName" autocomplete="given-name" placeholder="First name (optional)">
+                        <label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
+                        <label class="newsletter-consent"><input name="consent" type="checkbox" required> I agree to receive Imadi updates.</label>
+                        <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                        <button class="btn primary" type="submit">Subscribe</button><p id="newsletter-status" class="form-status" role="status"></p>
+                    </form>
+                </div>
+            </section>
+
+        <section class="section">
+            <div class="wrap home-note">
+                <div class="reveal">
+                    <div class="eyebrow">How we work</div>
+                    <h2>Clear thinking. Capable delivery.</h2>
+                    <p>We start with the reality of your organisation, then work alongside your team to turn the right
+                        opportunities into durable, well-made technology.</p>
+                </div>
+                <div class="principles reveal">
+                    <div class="principle"><strong>Built around outcomes</strong><span>Every decision serves a real
+                            business need.</span></div>
+                    <div class="principle"><strong>Secure by design</strong><span>Trust, resilience, and quality are
+                            part of the work from day one.</span></div>
+                    <div class="principle"><strong>Made to evolve</strong><span>Flexible systems that continue to earn
+                            their place over time.</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap feature home-cta reveal">
+                <div>
+                    <div class="eyebrow">Let’s make progress</div>
+                    <h2>Have a problem worth solving?</h2>
+                </div>
+                <a class="btn primary" href="contact.html">Get in touch</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <div class="footer-grid">
+                <div>
+                    <a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
+                    <p>Intelligent technology, made practical, secure, and measurable.</p>
+                    <p id="company-contact">contact@imadi.com · Pakistan</p>
+                </div>
+                <div>
+                    <div class="footer-title">Explore</div>
+                    <a href="solutions.html">Solutions</a>
+                    <a href="expertise.html">Expertise</a>
+                    <a href="process.html">Process</a>
+                    <a href="insights.html">Insights</a>
+                </div>
+                <div>
+                    <div class="footer-title">Connect</div>
+                    <a id="linkedin-link" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="privacy.html">Privacy policy</a>
+                    <a href="terms.html">Terms</a>
+                </div>
+            </div>
+            <div class="bottom"><span>© 2026 Imadi Technologies. All rights reserved.</span></div>
+        </div>
+    </footer>
+    <script src="site.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,2 @@
+# Preserve links that used the incorrect /public/ URL structure.
+/public/*  /:splat  301!

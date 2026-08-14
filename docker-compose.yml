@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    ports: ["3000:3000"]
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes: [media_uploads:/app/public/uploads]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: imadi
+      POSTGRES_PASSWORD: change-me
+      POSTGRES_DB: imadi
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U imadi -d imadi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes: { postgres_data: {}, media_uploads: {} }

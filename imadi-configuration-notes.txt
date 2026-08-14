@@ -1,0 +1,41 @@
+IMADI PLATFORM - PASSWORD AND EMAIL CONFIGURATION
+==================================================
+
+This file identifies where configuration is stored. Do NOT put real passwords in source code, Git, or this file.
+
+1. Application environment configuration
+   File for local development:
+   imadi-platform/.env
+
+   Template (safe to share):
+   imadi-platform/.env.example
+
+   Values to set in .env or in your production host's secret manager:
+   - DATABASE_URL: PostgreSQL username, password, host, and database.
+   - SESSION_SECRET: random secret for admin login sessions (at least 32 characters).
+   - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD: outgoing email server login.
+   - SMTP_FROM: email address customers see as the sender.
+   - SALES_NOTIFICATION_EMAIL: team inbox for new contact enquiries.
+   - PUBLIC_SITE_URL: public website address; used in reset and unsubscribe emails.
+   - SEED_ADMIN_PASSWORD: first seed-admin password. Remove it after the initial account is created.
+
+2. Administrator accounts
+   Stored in PostgreSQL in the AdminUser table.
+   - Email is stored as AdminUser.email.
+   - Passwords are NOT stored as readable text. They are securely hashed in AdminUser.passwordHash.
+   - Password reset tokens are stored as hashes in PasswordResetToken and expire after 30 minutes.
+
+3. Website contact details
+   Stored in PostgreSQL in the SiteSettings table and editable in Admin > Site settings.
+   - primaryEmail: public team email.
+   - phoneNumber: public phone / WhatsApp number. Use +92... or 92... for best results.
+   - notificationEmails: addresses that should receive operational notifications.
+
+4. Newsletter subscribers
+   Stored in PostgreSQL in the NewsletterSubscriber table.
+   - Email is stored as NewsletterSubscriber.email.
+   - Unsubscribe tokens are stored in NewsletterSubscriber.unsubscribeToken.
+
+Production guidance
+-------------------
+Use your hosting provider's secret manager for all production values. Keep .env out of Git, use unique strong credentials, and rotate any credential that has been shared or exposed.

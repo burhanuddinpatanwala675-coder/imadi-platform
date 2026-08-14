@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07111f">
+    <title>Admin | Imadi Technologies</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <a class="admin-brand" href="../index.html">IMADI<small>ADMINISTRATION</small></a>
+            <nav class="side-nav" aria-label="Admin navigation">
+                <button class="nav-item active" data-panel="overview">Overview</button>
+                <button class="nav-item" data-panel="inquiries">Inquiries</button>
+                <button class="nav-item" data-panel="content" data-editor-only>Content</button>
+                <button class="nav-item" data-panel="case-studies" data-editor-only>Case studies</button>
+                <button class="nav-item" data-panel="subscribers" data-admin-only>Newsletter</button>
+                <button class="nav-item" data-panel="settings" data-admin-only>Site settings</button>
+                <button class="nav-item" data-panel="team" data-admin-only>Team</button>
+            </nav>
+            <div class="sidebar-footer">
+                <p id="welcome">Checking session…</p>
+                <a href="../index.html">View website ↗</a>
+                <button class="logout-button" id="logout">Sign out</button>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <div>
+                    <p class="eyebrow" id="panel-label">Overview</p>
+                    <h1 id="panel-title">Good to see you.</h1>
+                </div>
+                <button class="mobile-menu" id="mobile-menu" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </header>
+
+            <section class="panel active" id="overview-panel">
+                <div class="stat-grid">
+                    <article class="stat-card"><span>Total inquiries</span><strong id="stat-inquiries">—</strong><small>All time</small></article>
+                    <article class="stat-card"><span>New inquiries</span><strong id="stat-new">—</strong><small>Awaiting response</small></article>
+                    <article class="stat-card"><span>Active subscribers</span><strong id="stat-subscribers">—</strong><small>Added in the last 30 days</small></article>
+                </div>
+                <section class="surface">
+                    <div class="surface-header"><div><h2>Recent inquiries</h2><p>The latest opportunities submitted through the website.</p></div><button class="text-button" data-show-panel="inquiries">View all</button></div>
+                    <div class="table-wrap"><table><thead><tr><th>Contact</th><th>Company</th><th>Status</th><th>Received</th></tr></thead><tbody id="recent-inquiries"><tr><td colspan="4" class="empty">Loading inquiries…</td></tr></tbody></table></div>
+                </section>
+            </section>
+
+            <section class="panel" id="inquiries-panel">
+                <div class="section-intro"><div><h2>Inquiries</h2><p>Review website enquiries, add notes, and keep the team aligned.</p></div><select id="inquiry-filter" aria-label="Filter inquiries"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="proposal_sent">Proposal sent</option><option value="won">Won</option><option value="lost">Lost</option><option value="archived">Archived</option></select></div>
+                <div class="inquiry-grid" id="inquiry-list"><p class="empty">Loading inquiries…</p></div>
+            </section>
+
+            <section class="panel" id="content-panel" data-editor-only>
+                <div class="section-intro"><div><h2>Content</h2><p>Draft, publish, and maintain your website insights.</p></div><button class="primary-button" id="new-post" data-editor-only>New post</button></div>
+                <div class="surface post-editor" id="post-editor" hidden>
+                    <div class="surface-header"><h2 id="post-editor-title">New post</h2><button class="icon-button" id="close-post-editor" aria-label="Close editor">×</button></div>
+                    <form id="post-form">
+                        <div class="form-grid"><label>Title<input id="post-title" required minlength="3"></label><label>Slug<input id="post-slug" required minlength="3" pattern="[a-z0-9]+(?:-[a-z0-9]+)*"></label><label>Category<input id="post-category" required value="Technology"></label><label>Status<select id="post-status"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label></div>
+                        <label>Tags <span>Comma-separated</span><input id="post-tags" placeholder="AI, engineering"></label><label>Cover image URL<input id="post-cover" type="url"></label><label>Upload cover image<input id="post-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span>PNG, JPEG, WebP or GIF; up to 5 MB.</span></label>
+                        <label>Excerpt<textarea id="post-excerpt" required minlength="10" rows="3"></textarea></label>
+                        <label>Content<textarea id="post-content" required minlength="10" rows="10"></textarea></label>
+                        <div class="form-actions"><button class="secondary-button" type="button" id="cancel-post">Cancel</button><button class="primary-button" type="submit">Save post</button></div>
+                    </form>
+                </div>
+                <div class="surface"><div class="table-wrap"><table><thead><tr><th>Title</th><th>Status</th><th>Category</th><th>Updated</th><th></th></tr></thead><tbody id="blog-list"><tr><td colspan="5" class="empty">Loading content…</td></tr></tbody></table></div></div>
+            </section>
+
+            <section class="panel" id="team-panel" data-admin-only>
+                <div class="section-intro"><div><h2>Team access</h2><p>Add administrators and manage roles.</p></div><button class="primary-button" id="new-user">Add team member</button></div>
+                <div class="surface" id="user-editor" hidden><div class="surface-header"><h2>Add team member</h2><button class="icon-button" id="close-user-editor" aria-label="Close form">×</button></div><form id="user-form"><div class="form-grid"><label>Full name<input id="user-name" required></label><label>Email<input id="user-email" type="email" required></label><label>Role<select id="user-role"><option value="editor">Editor</option><option value="sales">Sales</option><option value="super_admin">Super administrator</option></select></label><label>Password<input id="user-password" type="password" minlength="12" required></label></div><div class="form-actions"><button class="secondary-button" type="button" id="cancel-user">Cancel</button><button class="primary-button" type="submit">Add user</button></div></form></div>
+                <div class="surface"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Last sign-in</th><th></th></tr></thead><tbody id="user-list"><tr><td colspan="4" class="empty">Loading team…</td></tr></tbody></table></div></div>
+            </section>
+            <section class="panel" id="case-studies-panel" data-editor-only>
+                <div class="section-intro"><div><h2>Case studies</h2><p>Turn successful engagements into publishable proof.</p></div><button class="primary-button" id="new-case">New case study</button></div>
+                <div class="surface post-editor" id="case-editor" hidden><div class="surface-header"><h2 id="case-editor-title">New case study</h2><button class="icon-button" id="close-case-editor" aria-label="Close editor">×</button></div><form id="case-form"><div class="form-grid"><label>Title<input id="case-title" required></label><label>Slug<input id="case-slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*"></label><label>Client<input id="case-client"></label><label>Industry<input id="case-industry" required></label><label>Status<select id="case-status"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label><label>Cover image URL<input id="case-cover" type="url"></label></div><label>Upload cover image <input id="case-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span>PNG, JPEG, WebP or GIF; up to 5 MB.</span></label><label>Challenge<textarea id="case-challenge" required rows="3"></textarea></label><label>Solution<textarea id="case-solution" required rows="3"></textarea></label><label>Outcomes<textarea id="case-outcomes" required rows="3"></textarea></label><div class="form-actions"><button class="secondary-button" type="button" id="cancel-case">Cancel</button><button class="primary-button" type="submit">Save case study</button></div></form></div>
+                <div class="surface"><div class="table-wrap"><table><thead><tr><th>Title</th><th>Client</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody id="case-list"></tbody></table></div></div>
+            </section>
+            <section class="panel" id="subscribers-panel" data-admin-only><div class="section-intro"><div><h2>Newsletter</h2><p>Manage consented subscribers and opt-outs.</p></div></div><div class="surface"><div class="table-wrap"><table><thead><tr><th>Email</th><th>Name</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody id="subscriber-list"></tbody></table></div></div></section>
+            <section class="panel" id="settings-panel" data-admin-only><div class="section-intro"><div><h2>Site settings</h2><p>Control the contact details used across the website.</p></div></div><div class="surface"><form id="settings-form"><div class="form-grid"><label>Company name<input id="setting-company" required></label><label>Primary email<input id="setting-email" type="email" required></label><label>Phone<input id="setting-phone"></label><label>Consultation button text<input id="setting-cta"></label><label>Analytics ID<input id="setting-analytics"></label><label>Notification emails <span>Comma-separated</span><input id="setting-notifications"></label></div><label>Address<textarea id="setting-address" rows="3"></textarea></label><div class="form-actions"><button class="primary-button" type="submit">Save settings</button></div></form></div></section>
+            <p id="dashboard-status" class="status" role="status"></p>
+        </main>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>

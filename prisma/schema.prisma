@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  super_admin
+  editor
+  sales
+}
+
+enum InquiryStatus {
+  new
+  contacted
+  qualified
+  proposal_sent
+  won
+  lost
+  archived
+}
+
+enum SubscriberStatus {
+  active
+  unsubscribed
+}
+
+enum ContentStatus {
+  draft
+  published
+  archived
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  fullName     String
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(editor)
+
+  lastLoginAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignedInquiries ContactInquiry[] @relation("Assigned")
+  posts              BlogPost[]
+  auditLogs          AuditLog[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  adminUserId String
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+}
+
+model ContactInquiry {
+  id          String @id @default(cuid())
+  name        String
+  workEmail   String
+  companyName String
+  phoneNumber String?
+
+  projectType String
+  budgetRange String?
+  message     String
+  sourcePage  String
+
+  status InquiryStatus @default(new)
+
+  assignedToId String?
+  assignedTo   AdminUser? @relation("Assigned", fields: [assignedToId], references: [id])
+
+  notes String?
+  utm   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model NewsletterSubscriber {
+  id    String @id @default(cuid())
+  email String @unique
+
+  firstName String?
+
+  status SubscriberStatus @default(active)
+
+  consentAt DateTime @default(now())
+
+  unsubscribeToken String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id      String @id @default(cuid())
+  title   String
+  slug    String @unique
+  excerpt String
+  content String
+
+  coverImageUrl String?
+
+  authorId String
+  author   AdminUser @relation(fields: [authorId], references: [id])
+
+  category String
+  tags     String[]
+
+  seoTitle       String?
+  seoDescription String?
+
+  publishedAt DateTime?
+
+  status ContentStatus @default(draft)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CaseStudy {
+  id    String @id @default(cuid())
+  title String
+  slug  String @unique
+
+  clientName String?
+  industry   String
+
+  challenge String
+  solution  String
+  outcomes  String
+
+  coverImageUrl String?
+  galleryImages String[]
+
+  seoTitle       String?
+  seoDescription String?
+
+  publishedAt DateTime?
+
+  status ContentStatus @default(draft)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id Int @id @default(1)
+
+  companyName String
+  logoUrl     String?
+
+  primaryEmail String
+  phoneNumber  String?
+  address      String?
+
+  socialLinks Json
+
+  consultationCTA String?
+  analyticsId     String?
+
+  metaDefaults Json
+
+  notificationEmails String[]
+
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  actorId String?
+  actor   AdminUser? @relation(fields: [actorId], references: [id])
+
+  action String
+
+  entityType String?
+  entityId   String?
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+}
