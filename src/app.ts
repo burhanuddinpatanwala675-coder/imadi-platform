@@ -75,11 +75,11 @@ app.use(
 
 app.use(
     cors({
-        origin: (origin, cb) =>
-            !origin || origins.includes(origin)
-                ? cb(null, true)
-                : cb(new Error('Origin not allowed')),
+        origin: origins,
         credentials: true,
+        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        optionsSuccessStatus: 204,
     })
 );
 
