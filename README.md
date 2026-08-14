@@ -20,7 +20,7 @@ The production container applies Prisma migrations before starting the API, runs
 
 Before deploying, set these values in your host's secret manager (not in Git): `DATABASE_URL`, `SESSION_SECRET` (32+ random characters), `ALLOWED_ORIGINS`, `COOKIE_SECURE=true`, `PUBLIC_SITE_URL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, and `SALES_NOTIFICATION_EMAIL`.
 
-For the current Netlify site, set `ALLOWED_ORIGINS=https://imadi-technologies.netlify.app` exactly (no trailing slash). A different preview or custom-domain site needs its own exact HTTPS origin. The API now responds directly to `OPTIONS` preflight requests, but this environment value must still match the browser's `Origin` header.
+For the current Netlify site, the API defaults to `https://imadi-technologies.netlify.app` if `ALLOWED_ORIGINS` is not set. Set `ALLOWED_ORIGINS` explicitly when using a preview or custom domain; it must match the browser's exact HTTPS origin with no trailing slash. The API responds directly to `OPTIONS` preflight requests. SMTP is optional for startup, but must be configured before production email confirmations or password resets can be sent.
 
 Then run `npx prisma migrate deploy` (the production start command does this automatically), deploy the container behind HTTPS, and verify `/health`, `/ready`, an administrator login, a password-reset email, contact confirmation email, newsletter confirmation/unsubscribe, and an image upload. The compose configuration preserves local image uploads in the `media_uploads` volume; use persistent object storage or an equivalent persistent volume on your production host.
 
