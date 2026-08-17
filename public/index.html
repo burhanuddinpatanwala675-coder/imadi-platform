@@ -182,6 +182,12 @@
         .lab-banner { padding: 30px; display: flex; justify-content: space-between; align-items: center; gap: 28px; }
         .lab-banner strong { font: 700 1.45rem var(--display); }
         .lab-banner p { margin: 8px 0 0; color: var(--muted); max-width: 700px; }
+        .lab-projects { margin-bottom: 20px; }
+        .lab-status { display: inline-block; font: 700 .72rem var(--display); letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; }
+        .lab-status.status-live { color: var(--green); background: rgba(62,230,168,.12); border: 1px solid rgba(62,230,168,.35); }
+        .lab-status.status-prototype { color: var(--cyan); background: rgba(55,221,247,.1); border: 1px solid rgba(55,221,247,.3); }
+        .lab-status.status-development { color: var(--violet); background: rgba(135,102,255,.12); border: 1px solid rgba(135,102,255,.35); }
+        .lab-status.status-research { color: var(--muted); background: rgba(154,171,193,.12); border: 1px solid rgba(154,171,193,.3); }
         .outcome-grid { grid-template-columns: repeat(4, 1fr); }
         .outcome-grid .card { min-height: 190px; }
 
@@ -321,13 +327,14 @@
 
             <section class="section founder-section" id="founder">
                 <div class="wrap founder-grid">
+                    <!-- Founder portrait: swap this initials block for an <img> once Maria's photo file is provided. -->
                     <div class="founder-portrait reveal" aria-hidden="true">
                         <div class="founder-initial">MA</div>
                     </div>
                     <div class="reveal">
                         <div class="eyebrow">Founder & vision</div>
                         <h2>Technology should solve real problems.</h2>
-                        <p class="founder-name">Maria Aziz <span>· Founder, Imadi Technologies</span></p>
+                        <p class="founder-name">Maria Aziz <span>· Founder & CEO, Imadi Technologies</span></p>
                         <p>Imadi was built around a simple idea: advanced technology should be practical, understandable, and useful to the organisations that rely on it.</p>
                         <p>Our focus is bringing AI, software engineering, and thoughtful product thinking together to create systems that make meaningful work easier.</p>
                         <a class="btn" href="about.html">Meet the founder →</a>
@@ -342,6 +349,28 @@
                         <h2>Exploring what AI can make possible.</h2>
                         <p>We experiment with AI agents, business copilots, voice and conversational systems, document intelligence, and new product ideas.</p>
                     </div>
+                    <div class="grid ai-agents lab-projects reveal">
+                        <article class="card reveal">
+                            <span class="lab-status status-live">Prototype · Live</span>
+                            <h3>AI WhatsApp Agent</h3>
+                            <p>Conversational AI that handles customer messages, qualifies leads, and hands off to your team when it matters.</p>
+                        </article>
+                        <article class="card reveal">
+                            <span class="lab-status status-prototype">Prototype</span>
+                            <h3>Business Copilot</h3>
+                            <p>An internal assistant that helps teams query data, draft responses, and move day-to-day work forward faster.</p>
+                        </article>
+                        <article class="card reveal">
+                            <span class="lab-status status-development">In development</span>
+                            <h3>Document Intelligence Engine</h3>
+                            <p>Extracting and validating structured data from real business documents with less manual review.</p>
+                        </article>
+                        <article class="card reveal">
+                            <span class="lab-status status-research">Research</span>
+                            <h3>Voice AI Agent</h3>
+                            <p>Exploring voice-driven interfaces for customer and operational conversations.</p>
+                        </article>
+                    </div>
                     <div class="lab-banner card reveal">
                         <div>
                             <strong>Research. Prototype. Validate. Build.</strong>
@@ -355,6 +384,18 @@
             <!-- Responsible AI section intentionally withheld: per the Content Handoff doc this
                  topic is marked "do not publish until verified" pending Maria's answers on data
                  handling, human oversight, and security specifics. Add once confirmed. -->
+
+            <section class="section" id="featured-work" hidden>
+                <div class="wrap">
+                    <div class="section-head reveal">
+                        <div class="eyebrow">Proof, not promises</div>
+                        <h2>Real problems, real systems, real outcomes.</h2>
+                        <p>A look at the challenges we've solved and the technology behind them.</p>
+                    </div>
+                    <div class="grid three" id="featured-case-studies"></div>
+                    <p style="margin-top:28px"><a class="btn" href="case-studies.html">View all case studies →</a></p>
+                </div>
+            </section>
 
             <section class="section" id="newsletter">
                 <div class="wrap card newsletter-card reveal">
@@ -372,18 +413,22 @@
         <section class="section">
             <div class="wrap home-note">
                 <div class="reveal">
-                    <div class="eyebrow">How we work</div>
-                    <h2>Clear thinking. Capable delivery.</h2>
+                    <div class="eyebrow">Why Imadi</div>
+                    <h2>Why businesses choose Imadi.</h2>
                     <p>We start with the reality of your organisation, then work alongside your team to turn the right
                         opportunities into durable, well-made technology.</p>
                 </div>
                 <div class="principles reveal">
-                    <div class="principle"><strong>Built around outcomes</strong><span>Every decision serves a real
-                            business need.</span></div>
-                    <div class="principle"><strong>Secure by design</strong><span>Trust, resilience, and quality are
-                            part of the work from day one.</span></div>
-                    <div class="principle"><strong>Made to evolve</strong><span>Flexible systems that continue to earn
-                            their place over time.</span></div>
+                    <div class="principle"><strong>AI-first, not AI-for-show</strong><span>We identify where
+                            intelligence actually creates business value.</span></div>
+                    <div class="principle"><strong>Built around your workflow</strong><span>We adapt technology to the
+                            business rather than forcing the business into a tool.</span></div>
+                    <div class="principle"><strong>Engineering + product thinking</strong><span>We don't stop at
+                            prototypes.</span></div>
+                    <div class="principle"><strong>Secure from day one</strong><span>Security, reliability and
+                            maintainability are part of the architecture.</span></div>
+                    <div class="principle"><strong>Built to evolve</strong><span>Systems can grow with the
+                            organisation.</span></div>
                 </div>
             </div>
         </section>

@@ -211,6 +211,27 @@ const apiBase = async () => {
 })();
 
 (() => {
+    // Homepage "featured work" teaser: pulls the same published case studies
+    // from the CMS and shows up to 3. The section starts hidden and only
+    // reveals once there's real published work to show, so nothing empty or
+    // fabricated is ever displayed before Maria adds real case studies.
+    const list = document.querySelector('#featured-case-studies');
+    if (!list) return;
+    const section = document.querySelector('#featured-work');
+    (async () => {
+        try {
+            const response = await fetch(`${await apiBase()}/api/case-studies`); const result = await response.json();
+            if (!response.ok || !result.success) throw new Error();
+            const items = result.data.items.slice(0, 3);
+            if (!items.length) return;
+            list.replaceChildren();
+            items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `case-study.html?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
+            if (section) section.hidden = false;
+        } catch (error) { console.warn('Featured case studies loading failed:', error); }
+    })();
+})();
+
+(() => {
     const title = document.querySelector('#case-title');
     if (!title) return;
     (async () => {
