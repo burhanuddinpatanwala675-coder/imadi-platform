@@ -3,8 +3,17 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon's DATABASE_URL is the pooled (PgBouncer, transaction-mode) endpoint,
+  // which is right for normal app queries but breaks `prisma migrate deploy`:
+  // the migration engine needs a session-level Postgres advisory lock, which
+  // a transaction-mode pooler can't reliably hold, so migrations time out
+  // waiting for a lock they can never get. DIRECT_URL should be Neon's
+  // direct (non-pooled) connection string — same credentials/database, just
+  // without "-pooler" in the hostname. Only migrate commands use this;
+  // the running app still queries through the pooled DATABASE_URL.
+  directUrl = env("DIRECT_URL")
 }
 
 enum AdminRole {
