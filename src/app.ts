@@ -214,6 +214,19 @@ const email = z
     .transform((v) => v.toLowerCase());
 
 
+// Accepts either a full absolute URL (https://...) or the site-relative
+// path returned by POST /api/admin/media (e.g. "/uploads/xyz.jpg"), since
+// both are valid values for an <img src> and the upload endpoint only
+// returns the latter.
+const imageRef = z
+    .string()
+    .trim()
+    .max(2048)
+    .refine((value) => /^https?:\/\//i.test(value) || value.startsWith('/'), {
+        message: 'Enter a valid image URL or upload an image.',
+    });
+
+
 const contactSchema = z.object({
     name: text,
     workEmail: email,
@@ -302,7 +315,7 @@ app.post(
     '/api/admin/blog',
     csrf,
     requireAuth([AdminRole.super_admin, AdminRole.editor]),
-    async (req, res) => {
+    async (req, res, next: NextFunction) => {
         try {
             const schema = z.object({
                 title: z.string().min(3),
@@ -312,7 +325,7 @@ app.post(
                 category: z.string().min(2).max(100).default('Technology'),
                 status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
-                coverImageUrl: z.string().url().max(2048).nullable().optional(),
+                coverImageUrl: imageRef.nullable().optional(),
             });
 
             const data = schema.parse(req.body);
@@ -343,11 +356,7 @@ app.post(
 
         } catch (error) {
             console.error('BLOG CREATE ERROR:', error);
-
-            return res.status(400).json({
-                success: false,
-                error
-            });
+            next(error);
         }
     }
 );
@@ -355,7 +364,7 @@ app.delete(
     '/api/admin/blog/:id',
     csrf,
     requireAuth([AdminRole.super_admin, AdminRole.editor]),
-    async (req, res) => {
+    async (req, res, next: NextFunction) => {
 
         try {
 
@@ -372,11 +381,7 @@ app.delete(
         } catch (error) {
 
             console.error('BLOG DELETE ERROR:', error);
-
-            return res.status(400).json({
-                success: false,
-                error
-            });
+            next(error);
 
         }
 
@@ -1289,7 +1294,7 @@ app.get(
 app.get(
     '/api/admin/blog/:id',
     requireAuth([AdminRole.super_admin, AdminRole.editor]),
-    async (req, res) => {
+    async (req, res, next: NextFunction) => {
 
         try {
 
@@ -1300,10 +1305,7 @@ app.get(
             });
 
             if (!post) {
-                return res.status(404).json({
-                    success: false,
-                    error: 'Post not found'
-                });
+                return fail(res, 'NOT_FOUND', 'Post not found.', 404);
             }
 
             return res.json({
@@ -1314,11 +1316,7 @@ app.get(
         } catch (error) {
 
             console.error('BLOG FETCH ERROR:', error);
-
-            return res.status(400).json({
-                success: false,
-                error
-            });
+            next(error);
 
         }
 
@@ -1329,7 +1327,7 @@ app.patch(
     '/api/admin/blog/:id',
     csrf,
     requireAuth([AdminRole.super_admin, AdminRole.editor]),
-    async (req, res) => {
+    async (req, res, next: NextFunction) => {
 
         try {
 
@@ -1341,7 +1339,7 @@ app.patch(
                 category: z.string().min(2).max(100),
                 status: z.nativeEnum(ContentStatus),
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
-                coverImageUrl: z.string().url().max(2048).nullable().optional(),
+                coverImageUrl: imageRef.nullable().optional(),
             });
 
             const data = schema.parse(req.body);
@@ -1371,11 +1369,7 @@ app.patch(
         } catch (error) {
 
             console.error('BLOG UPDATE ERROR:', error);
-
-            return res.status(400).json({
-                success: false,
-                error
-            });
+            next(error);
 
         }
 
@@ -1658,7 +1652,7 @@ const caseStudySchema = z.object({
     challenge: z.string().trim().min(10).max(10000),
     solution: z.string().trim().min(10).max(10000),
     outcomes: z.string().trim().min(10).max(10000),
-    coverImageUrl: z.string().url().max(2048).nullable().optional(),
+    coverImageUrl: imageRef.nullable().optional(),
     galleryImages: z.array(z.string().url().max(2048)).max(12).default([]),
     status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),
 });
@@ -1728,12 +1722,21 @@ app.post('/api/admin/media', csrf, requireAuth([AdminRole.super_admin, AdminRole
     } catch (e) { next(e); }
 });
 
+// Empty string means "not set yet" (cleared in the admin form), so it is
+// accepted alongside a real absolute URL rather than rejected.
+const socialLinkUrl = z.union([z.string().trim().url().max(300), z.literal('')]).optional();
+
 app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), async (req: AuthRequest, res, next) => {
     try {
         const data = z.object({
             companyName: text, primaryEmail: email, phoneNumber: z.string().trim().max(80).nullable().optional(),
             address: z.string().trim().max(500).nullable().optional(), consultationCTA: z.string().trim().max(160).nullable().optional(),
             analyticsId: z.string().trim().max(120).nullable().optional(), notificationEmails: z.array(email).max(12),
+            socialLinks: z.object({
+                linkedin: socialLinkUrl,
+                x: socialLinkUrl,
+                linkedinFounder: socialLinkUrl,
+            }).optional(),
         }).parse(req.body);
         const item = await prisma.siteSettings.update({ where: { id: 1 }, data });
         await audit(req, 'settings.updated', 'SiteSettings', '1');

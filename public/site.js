@@ -34,14 +34,25 @@
             element.textContent = [settings.primaryEmail, settings.phoneNumber, settings.address].filter(Boolean).join(' · ') || 'Contact our team for verified details.';
         });
 
+        // Social links stay hidden (see the "hidden" attribute in the markup)
+        // until a real URL is set in Admin > Site settings, so no dead or
+        // placeholder links are ever shown to visitors.
         const linkedin = document.querySelector('#linkedin-link');
         if (linkedin && settings.socialLinks?.linkedin) {
             linkedin.href = settings.socialLinks.linkedin;
+            linkedin.hidden = false;
         }
 
         const xLink = document.querySelector('#x-link');
         if (xLink && settings.socialLinks?.x) {
             xLink.href = settings.socialLinks.x;
+            xLink.hidden = false;
+        }
+
+        const founderLinkedin = document.querySelector('#founder-linkedin-link');
+        if (founderLinkedin && settings.socialLinks?.linkedinFounder) {
+            founderLinkedin.href = settings.socialLinks.linkedinFounder;
+            founderLinkedin.hidden = false;
         }
     } catch (error) {
         console.warn('Settings loading failed:', error);
