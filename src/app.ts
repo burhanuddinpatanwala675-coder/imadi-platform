@@ -1736,6 +1736,9 @@ app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), asy
                 linkedin: socialLinkUrl,
                 x: socialLinkUrl,
                 linkedinFounder: socialLinkUrl,
+                instagram: socialLinkUrl,
+                facebook: socialLinkUrl,
+                tiktok: socialLinkUrl,
             }).optional(),
         }).parse(req.body);
         const item = await prisma.siteSettings.update({ where: { id: 1 }, data });
