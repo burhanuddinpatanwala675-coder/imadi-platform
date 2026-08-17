@@ -26,13 +26,27 @@
             document.body.append(button);
         }
 
+        const contactText = [settings.primaryEmail, settings.phoneNumber, settings.address].filter(Boolean).join(' · ') || 'Contact our team for verified details.';
         const contact = document.querySelector('#company-contact');
-        if (contact) {
-            contact.textContent = `${settings.primaryEmail || ''} · ${settings.address || ''}`;
-        }
+        if (contact) contact.textContent = contactText;
         document.querySelectorAll('[data-company-contact]').forEach((element) => {
-            element.textContent = [settings.primaryEmail, settings.phoneNumber, settings.address].filter(Boolean).join(' · ') || 'Contact our team for verified details.';
+            element.textContent = contactText;
         });
+
+        // Structured data ("Organization" JSON-LD) starts with no url/email in the
+        // markup so nothing fake is ever shipped — fill in the real deployed
+        // origin and the admin-configured contact email once settings load.
+        const jsonLd = document.querySelector('#org-jsonld');
+        if (jsonLd) {
+            try {
+                const data = JSON.parse(jsonLd.textContent);
+                data.url = window.location.origin;
+                if (settings.primaryEmail) data.email = settings.primaryEmail;
+                jsonLd.textContent = JSON.stringify(data);
+            } catch (error) {
+                console.warn('Structured data update failed:', error);
+            }
+        }
 
         // Social links stay hidden (see the "hidden" attribute in the markup)
         // until a real URL is set in Admin > Site settings, so no dead or
@@ -57,7 +71,6 @@
         console.warn('Settings loading failed:', error);
     }
 })(); const nav = document.querySelector('.nav'), menu = document.querySelector('.menu');
-document.querySelectorAll('a[href="[Privacy policy URL]"]').forEach(a => a.href = 'privacy.html'); document.querySelectorAll('a[href="[Terms URL]"]').forEach(a => a.href = 'terms.html');
 if (menu) { menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', open); menu.textContent = open ? '×' : '☰' }); document.querySelectorAll('.navlinks a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.textContent = '☰' })) }
 const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target) } }), { threshold: .1 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 (() => {

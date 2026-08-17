@@ -12,7 +12,7 @@
     <meta property="og:description" content="Intelligent software, AI agents, and automation systems that reduce manual work and help businesses grow.">
     <meta name="twitter:card" content="summary">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Imadi Technologies","url":"https://imadi.example","email":"hello@imadi.example","description":"AI-powered software, AI agents, and automation systems that reduce manual work and help real-world businesses grow."}</script>
+    <script id="org-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Imadi Technologies","description":"AI-powered software, AI agents, and automation systems that reduce manual work and help real-world businesses grow."}</script>
     <title>Imadi Technologies | AI-powered technology for real-world businesses.</title>
     <link rel="stylesheet" href="site.css">
     <style>
@@ -151,6 +151,45 @@
             letter-spacing: -.05em;
         }
 
+        .ai-showcase { padding-top: 38px; }
+        .ai-agents { grid-template-columns: repeat(4, 1fr); }
+        .ai-agents .card { min-height: 245px; }
+        .ai-assessment {
+            margin-top: 24px;
+            padding: 28px 30px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(55,221,247,.09), rgba(135,102,255,.08));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+        .ai-assessment h3 { margin: 8px 0; font: 700 1.7rem/1.05 var(--display); letter-spacing: -.04em; }
+        .ai-assessment p { margin: 0; max-width: 650px; color: var(--muted); }
+        .founder-grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: 55px; align-items: center; }
+        .founder-portrait {
+            min-height: 390px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at 50% 35%, rgba(55,221,247,.18), transparent 48%), rgba(13,28,48,.48);
+        }
+        .founder-initial { font: 700 clamp(4rem, 9vw, 8rem)/1 var(--display); letter-spacing: -.09em; color: var(--cyan); }
+        .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; }
+        .founder-name span { color: var(--muted); font-weight: 500; }
+        .lab-banner { padding: 30px; display: flex; justify-content: space-between; align-items: center; gap: 28px; }
+        .lab-banner strong { font: 700 1.45rem var(--display); }
+        .lab-banner p { margin: 8px 0 0; color: var(--muted); max-width: 700px; }
+        .outcome-grid { grid-template-columns: repeat(4, 1fr); }
+        .outcome-grid .card { min-height: 190px; }
+
+        @media (max-width: 980px) {
+            .ai-agents, .outcome-grid { grid-template-columns: repeat(2, 1fr); }
+            .founder-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 760px) {
             .home-hero {
                 min-height: auto;
@@ -166,6 +205,10 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
+
+            .ai-agents, .outcome-grid { grid-template-columns: 1fr; }
+            .ai-assessment, .lab-banner { align-items: flex-start; flex-direction: column; }
+            .founder-portrait { min-height: 260px; }
         }
     </style>
 </head>
@@ -177,6 +220,7 @@
             <nav class="navlinks" aria-label="Main navigation">
                 <a href="index.html" aria-current="page">Home</a>
                 <a href="solutions.html">Solutions</a>
+                <a href="#ai-lab">AI Lab</a>
                 <a href="expertise.html">Expertise</a>
                 <a href="process.html">Process</a>
                 <a href="insights.html">Insights</a>
@@ -203,6 +247,46 @@
                 <div class="home-signal">Practical AI for ambitious teams</div>
             </div>
         </section>
+
+            <section class="section ai-showcase" id="ai-solutions">
+                <div class="wrap">
+                    <div class="section-head reveal">
+                        <div class="eyebrow">AI solutions</div>
+                        <h2>Give your business an intelligent workforce.</h2>
+                        <p>From customer conversations to operations and documents, we build AI systems that work alongside your team.</p>
+                    </div>
+                    <div class="grid ai-agents">
+                        <article class="card reveal">
+                            <div class="icon">✦</div>
+                            <h3>AI Agents</h3>
+                            <p>Digital agents that understand tasks, use business tools, and help teams get work done.</p>
+                        </article>
+                        <article class="card reveal">
+                            <div class="icon">◌</div>
+                            <h3>WhatsApp AI</h3>
+                            <p>Intelligent customer and operational workflows built around the conversations your business already has.</p>
+                        </article>
+                        <article class="card reveal">
+                            <div class="icon">◇</div>
+                            <h3>Document Intelligence</h3>
+                            <p>Extract, classify, validate and process information from documents with less manual effort.</p>
+                        </article>
+                        <article class="card reveal">
+                            <div class="icon">↗</div>
+                            <h3>Workflow Automation</h3>
+                            <p>Connect people, software and AI to eliminate repetitive steps and keep operations moving.</p>
+                        </article>
+                    </div>
+                    <div class="ai-assessment reveal">
+                        <div>
+                            <div class="eyebrow">AI opportunity assessment</div>
+                            <h3>Not sure where AI fits?</h3>
+                            <p>Tell us what your team does manually. We can help identify practical opportunities for automation and intelligent software.</p>
+                        </div>
+                        <a class="btn primary" href="contact.html">Find my AI opportunities →</a>
+                    </div>
+                </div>
+            </section>
 
             <section class="section">
             <div class="wrap">
@@ -234,6 +318,44 @@
                 </div>
             </div>
             </section>
+
+            <section class="section founder-section" id="founder">
+                <div class="wrap founder-grid">
+                    <div class="founder-portrait reveal" aria-hidden="true">
+                        <div class="founder-initial">MA</div>
+                    </div>
+                    <div class="reveal">
+                        <div class="eyebrow">Founder & vision</div>
+                        <h2>Technology should solve real problems.</h2>
+                        <p class="founder-name">Maria Aziz <span>· Founder, Imadi Technologies</span></p>
+                        <p>Imadi was built around a simple idea: advanced technology should be practical, understandable, and useful to the organisations that rely on it.</p>
+                        <p>Our focus is bringing AI, software engineering, and thoughtful product thinking together to create systems that make meaningful work easier.</p>
+                        <a class="btn" href="about.html">Meet the founder →</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="ai-lab">
+                <div class="wrap">
+                    <div class="section-head reveal">
+                        <div class="eyebrow">Imadi AI Lab</div>
+                        <h2>Exploring what AI can make possible.</h2>
+                        <p>We experiment with AI agents, business copilots, voice and conversational systems, document intelligence, and new product ideas.</p>
+                    </div>
+                    <div class="lab-banner card reveal">
+                        <div>
+                            <strong>Research. Prototype. Validate. Build.</strong>
+                            <p>We turn promising AI ideas into practical experiments and, when the value is proven, production-ready systems.</p>
+                        </div>
+                        <a class="btn" href="contact.html">Talk to us about an AI idea →</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Responsible AI section intentionally withheld: per the Content Handoff doc this
+                 topic is marked "do not publish until verified" pending Maria's answers on data
+                 handling, human oversight, and security specifics. Add once confirmed. -->
+
             <section class="section" id="newsletter">
                 <div class="wrap card newsletter-card reveal">
                     <div><div class="eyebrow">Stay in the loop</div><h2>Useful technology thinking, occasionally.</h2><p>Get practical ideas and new Imadi insights. No spam, and you can opt out at any time.</p></div>
@@ -266,6 +388,22 @@
             </div>
         </section>
 
+            <section class="section">
+                <div class="wrap">
+                    <div class="section-head reveal">
+                        <div class="eyebrow">From problem to impact</div>
+                        <h2>We build around outcomes, not buzzwords.</h2>
+                        <p>Every engagement starts with the problem, the workflow, and the outcome you want. Then we choose the right combination of AI, automation, software and infrastructure.</p>
+                    </div>
+                    <div class="grid capabilities outcome-grid">
+                        <div class="card reveal"><h3>01 · Understand</h3><p>Map the current process, friction points, data and business goals.</p></div>
+                        <div class="card reveal"><h3>02 · Identify</h3><p>Find where AI and automation can create measurable value.</p></div>
+                        <div class="card reveal"><h3>03 · Build</h3><p>Design and engineer a secure solution around the real workflow.</p></div>
+                        <div class="card reveal"><h3>04 · Improve</h3><p>Measure, learn and evolve the system as the organisation grows.</p></div>
+                    </div>
+                </div>
+            </section>
+
         <section class="section">
             <div class="wrap feature home-cta reveal">
                 <div>
@@ -283,11 +421,12 @@
                 <div>
                     <a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
                     <p>Intelligent technology, made practical, secure, and measurable.</p>
-                    <p id="company-contact">contact@imadi.com · Pakistan</p>
+                    <p id="company-contact">Contact our team for verified details.</p>
                 </div>
                 <div>
                     <div class="footer-title">Explore</div>
                     <a href="solutions.html">Solutions</a>
+                    <a href="#ai-lab">AI Lab</a>
                     <a href="expertise.html">Expertise</a>
                     <a href="process.html">Process</a>
                     <a href="insights.html">Insights</a>
