@@ -242,6 +242,26 @@ const apiBase = async () => {
         console.warn('Blog loading failed:', error);
     }
 })();
+// Post content is written as plain text in a plain <textarea> in the admin
+// dashboard (no rich-text editor), so it normally has no HTML markup at all.
+// Inserted as-is, HTML collapses every newline to a single space and the
+// whole post renders as one unbroken wall of text. If the content already
+// contains real HTML (written directly as markup), leave it untouched;
+// otherwise escape it and turn each line into its own paragraph so headings
+// and paragraphs the author separated with line breaks actually show as
+// separate lines.
+function formatArticleContent(raw) {
+    if (!raw) return '';
+    if (/<(p|h[1-6]|ul|ol|li|blockquote|div|img|table)[\s>]/i.test(raw)) return raw;
+    const escapeHtml = (value) => value.replace(/[&<>]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[char]));
+    return raw
+        .split(/\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => `<p>${escapeHtml(line)}</p>`)
+        .join('');
+}
+
 // Dynamic article loader
 (async function loadArticle() {
     const title = document.querySelector('#article-title');
@@ -292,7 +312,7 @@ const apiBase = async () => {
             cover.style.display = 'none';
         }
         document.querySelector('#article-body').innerHTML =
-            post.content || '';
+            formatArticleContent(post.content);
 
     } catch (error) {
         console.error('Article loading failed:', error);

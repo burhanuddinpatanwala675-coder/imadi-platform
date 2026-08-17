@@ -231,6 +231,20 @@ a {
     margin: 0
 }
 
+/* Long-form article body: .card p above is margin:0 for short card blurbs,
+   which left every paragraph of a blog post jammed against the next with no
+   visual break. Give article paragraphs breathing room and a readable line
+   height instead. */
+.article-content #article-body p {
+    margin: 0 0 20px;
+    line-height: 1.75;
+    font-size: 1rem;
+}
+
+.article-content #article-body p:last-child {
+    margin-bottom: 0;
+}
+
 .arrow {
     margin-top: auto;
     padding-top: 20px;
