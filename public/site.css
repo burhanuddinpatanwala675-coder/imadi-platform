@@ -486,6 +486,35 @@ footer {
     margin-bottom: 12px
 }
 
+/* Social icons sit in their own compact row instead of stacking one-per-line
+   like the page-link list above/below them. */
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 12px
+}
+
+.social-links a {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 !important;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: var(--muted)
+}
+
+.social-links a:hover {
+    border-color: var(--cyan);
+    color: var(--cyan)
+}
+
 .bottom {
     padding-top: 20px;
     display: flex;
