@@ -206,6 +206,15 @@ a {
     box-shadow: 0 20px 40px rgba(0, 0, 0, .18)
 }
 
+/* .card is a flex column with no align-items set, so it defaults to
+   "stretch" — fine for text, but it stretches a direct <a class="btn">
+   child (e.g. the About page "Discuss your engagement" button) to the
+   card's full width instead of sizing to its own text. */
+.card > .btn {
+    align-self: flex-start;
+    margin-top: 20px;
+}
+
 .icon {
     width: 43px;
     height: 43px;

@@ -226,6 +226,20 @@ const imageRef = z
         message: 'Enter a valid image URL or upload an image.',
     });
 
+// Value from an <input type="date"> (yyyy-mm-dd). Lets an editor choose the
+// blog post / case study's publish date instead of it always being "now" —
+// useful for backdating older work or keeping a specific publish order.
+const publishDate = z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Enter a valid date.')
+    .optional();
+
+const resolvePublishedAt = (status: ContentStatus, chosenDate?: string) =>
+    status === ContentStatus.published
+        ? new Date(chosenDate ? `${chosenDate}T00:00:00.000Z` : Date.now())
+        : null;
+
 
 const contactSchema = z.object({
     name: text,
@@ -326,6 +340,7 @@ app.post(
                 status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
                 coverImageUrl: imageRef.nullable().optional(),
+                publishedAt: publishDate,
             });
 
             const data = schema.parse(req.body);
@@ -340,7 +355,7 @@ app.post(
                     tags: data.tags,
                     coverImageUrl: data.coverImageUrl,
                     status: data.status,
-                    publishedAt: data.status === ContentStatus.published ? new Date() : null,
+                    publishedAt: resolvePublishedAt(data.status, data.publishedAt),
                     author: {
                         connect: {
                             id: req.user!.id
@@ -1340,6 +1355,7 @@ app.patch(
                 status: z.nativeEnum(ContentStatus),
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
                 coverImageUrl: imageRef.nullable().optional(),
+                publishedAt: publishDate,
             });
 
             const data = schema.parse(req.body);
@@ -1357,7 +1373,7 @@ app.patch(
                     status: data.status,
                     tags: data.tags,
                     coverImageUrl: data.coverImageUrl,
-                    publishedAt: data.status === ContentStatus.published ? new Date() : null,
+                    publishedAt: resolvePublishedAt(data.status, data.publishedAt),
                 }
             });
 
@@ -1655,6 +1671,7 @@ const caseStudySchema = z.object({
     coverImageUrl: imageRef.nullable().optional(),
     galleryImages: z.array(z.string().url().max(2048)).max(12).default([]),
     status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),
+    publishedAt: publishDate,
 });
 
 app.get('/api/admin/case-studies', requireAuth([AdminRole.super_admin, AdminRole.editor]), async (_req, res, next) => {
@@ -1664,7 +1681,7 @@ app.get('/api/admin/case-studies', requireAuth([AdminRole.super_admin, AdminRole
 app.post('/api/admin/case-studies', csrf, requireAuth([AdminRole.super_admin, AdminRole.editor]), async (req: AuthRequest, res, next) => {
     try {
         const data = caseStudySchema.parse(req.body);
-        const item = await prisma.caseStudy.create({ data: { ...data, publishedAt: data.status === ContentStatus.published ? new Date() : null } });
+        const item = await prisma.caseStudy.create({ data: { ...data, publishedAt: resolvePublishedAt(data.status, data.publishedAt) } });
         await audit(req, 'case-study.created', 'CaseStudy', item.id, { title: item.title });
         success(res, item, 201);
     } catch (e) { next(e); }
@@ -1673,7 +1690,7 @@ app.post('/api/admin/case-studies', csrf, requireAuth([AdminRole.super_admin, Ad
 app.patch('/api/admin/case-studies/:id', csrf, requireAuth([AdminRole.super_admin, AdminRole.editor]), async (req: AuthRequest, res, next) => {
     try {
         const data = caseStudySchema.parse(req.body);
-        const item = await prisma.caseStudy.update({ where: { id: String(req.params.id) }, data: { ...data, publishedAt: data.status === ContentStatus.published ? new Date() : null } });
+        const item = await prisma.caseStudy.update({ where: { id: String(req.params.id) }, data: { ...data, publishedAt: resolvePublishedAt(data.status, data.publishedAt) } });
         await audit(req, 'case-study.updated', 'CaseStudy', item.id, { title: item.title });
         success(res, item);
     } catch (e) { next(e); }
