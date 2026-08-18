@@ -189,6 +189,27 @@ a {
     grid-template-columns: repeat(2, 1fr)
 }
 
+/* Insights, case studies, and the homepage's featured-work list are all
+   populated at runtime from however many items are published — could be
+   1, 2, or 3+. A plain 3-column grid leaves a lone card or a short row
+   stuck on the left with empty space beside it. Switch these specific
+   lists to a centered, wrapping flex row instead: cards keep a consistent
+   size but the row centers itself when it isn't full. */
+#insights-list,
+#case-studies-list,
+#featured-case-studies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#insights-list > *,
+#case-studies-list > *,
+#featured-case-studies > * {
+    flex: 1 1 320px;
+    max-width: 380px;
+}
+
 .card {
     padding: 28px;
     border: 1px solid var(--line);
