@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Try a live, rule-based preview of document intelligence — paste text and see structured fields extracted instantly.">
+    <meta property="og:type" content="website"><meta property="og:title" content="AI Demo | Imadi Technologies"><meta property="og:description" content="Try a live, rule-based preview of document intelligence — paste text and see structured fields extracted instantly."><meta property="og:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <title>AI Demo | Imadi Technologies</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+
+<body>
+    <header class="nav">
+        <div class="wrap navin"><a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
+            <nav class="navlinks" aria-label="Main navigation"><a href="index.html">Home</a><a
+                    href="solutions.html">Solutions</a><a href="assessment.html">AI Assessment</a><a
+                    aria-current="page" href="ai-demo.html">AI Demo</a><a href="contact.html">Contact</a></nav><a
+                class="btn primary call" href="contact.html">Contact Us</a><button class="menu"
+                aria-label="Toggle menu" aria-expanded="false">☰</button>
+        </div>
+    </header>
+    <main>
+        <section class="wrap page-hero reveal">
+            <div class="eyebrow">Interactive preview</div>
+            <h1>See document intelligence in action.</h1>
+            <p>Paste in a document — an invoice, an order confirmation, a booking email — and watch it get turned
+                into structured data instantly. This runs entirely in your browser using pattern-based extraction, so
+                nothing you paste is sent anywhere.</p>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="wizard card" id="doc-demo" style="max-width:920px">
+                    <div class="field full">
+                        <label for="doc-input">Paste document text</label>
+                        <textarea id="doc-input" rows="9" placeholder="Paste an invoice, order, or booking email here…"></textarea>
+                    </div>
+                    <div class="wizard-actions" style="justify-content:flex-start;gap:14px">
+                        <button type="button" class="btn" id="doc-sample">Try a sample document</button>
+                        <button type="button" class="btn primary" id="doc-analyze">Analyze document →</button>
+                    </div>
+
+                    <div id="doc-results" hidden style="margin-top:28px">
+                        <div class="report-badge" id="doc-match-count">0 / 5 fields detected</div>
+                        <div class="report-recommendations" id="doc-fields"></div>
+                    </div>
+
+                    <p class="form-status">This is a simplified, rule-based preview built to show the shape of
+                        document intelligence — not our production system. Real deployments use models tuned to your
+                        specific documents, with far higher accuracy and support for scans, layouts, and handwriting.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap card reveal">
+                <div class="eyebrow">Want this built for your documents?</div>
+                <h2>This is the simplified version.</h2>
+                <p>Our production Document Intelligence systems handle real-world variation — scanned PDFs, messy
+                    layouts, multiple languages, and validation against your existing systems. Tell us what you're
+                    processing and we'll show you what a tailored version looks like.</p>
+                <a class="btn primary" href="contact.html">Talk to our team</a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="wrap">
+            <div class="footer-grid">
+                <div><a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
+                    <p>Intelligent technology, made practical, secure, and measurable.</p>
+                </div>
+                <div>
+                    <div class="footer-title">Explore</div><a href="solutions.html">Solutions</a><a href="products.html">Products</a><a
+                        href="expertise.html">Expertise</a><a href="process.html">Process</a>
+                <a href="how-we-build.html">How We Build</a><a href="ai-demo.html">AI Demo</a><a href="roi-calculator.html">ROI Calculator</a><a href="build-vs-buy.html">Build vs. Buy</a></div>
+                <div>
+                    <div class="footer-title">Connect</div><a href="contact.html">Contact</a><a href="careers.html">Careers</a><a
+                        href="privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="bottom"><span>© 2026 Imadi Technologies. All rights reserved.</span></div>
+        </div>
+    </footer>
+    <script src="site.js"></script>
+</body>
+
+</html>

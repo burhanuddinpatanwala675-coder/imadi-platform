@@ -709,3 +709,198 @@ function formatArticleContent(raw) {
 
     renderStep();
 })();
+
+(() => {
+    const root = document.querySelector('#roi-calculator');
+    if (!root) return;
+
+    const peopleInput = document.querySelector('#roi-people');
+    const hoursInput = document.querySelector('#roi-hours');
+    const rateInput = document.querySelector('#roi-rate');
+    const reductionInput = document.querySelector('#roi-reduction');
+    const reductionValue = document.querySelector('#roi-reduction-value');
+    const costInput = document.querySelector('#roi-cost');
+
+    const hoursSavedOut = document.querySelector('#roi-hours-saved');
+    const costSavedOut = document.querySelector('#roi-cost-saved');
+    const paybackRow = document.querySelector('#roi-payback-row');
+    const paybackOut = document.querySelector('#roi-payback');
+
+    const money = (value) => `$${Math.round(value).toLocaleString('en-US')}`;
+
+    function recalculate() {
+        const people = Math.max(0, Number(peopleInput.value) || 0);
+        const hoursPerWeek = Math.max(0, Number(hoursInput.value) || 0);
+        const rate = Math.max(0, Number(rateInput.value) || 0);
+        const reduction = Math.max(0, Math.min(100, Number(reductionInput.value) || 0));
+        const monthlyCost = Number(costInput.value);
+
+        reductionValue.textContent = `${reduction}%`;
+
+        const weeklyHoursSaved = people * hoursPerWeek * (reduction / 100);
+        const monthlyHoursSaved = weeklyHoursSaved * 4.33;
+        const annualCostSaved = weeklyHoursSaved * 52 * rate;
+
+        hoursSavedOut.textContent = `${monthlyHoursSaved.toLocaleString('en-US', { maximumFractionDigits: 0 })} hrs`;
+        costSavedOut.textContent = money(annualCostSaved);
+
+        if (costInput.value && !Number.isNaN(monthlyCost) && monthlyCost > 0) {
+            const monthlySavings = (monthlyHoursSaved * rate);
+            if (monthlySavings > 0) {
+                const months = monthlyCost / monthlySavings;
+                paybackRow.hidden = false;
+                paybackOut.textContent = months < 1
+                    ? '< 1 month'
+                    : `${months.toLocaleString('en-US', { maximumFractionDigits: 1 })} months`;
+            } else {
+                paybackRow.hidden = false;
+                paybackOut.textContent = 'Not yet, based on these numbers';
+            }
+        } else {
+            paybackRow.hidden = true;
+        }
+    }
+
+    [peopleInput, hoursInput, rateInput, reductionInput, costInput].forEach((input) => {
+        input.addEventListener('input', recalculate);
+    });
+
+    recalculate();
+})();
+
+(() => {
+    const root = document.querySelector('#doc-demo');
+    if (!root) return;
+
+    const input = document.querySelector('#doc-input');
+    const analyzeBtn = document.querySelector('#doc-analyze');
+    const sampleBtn = document.querySelector('#doc-sample');
+    const results = document.querySelector('#doc-results');
+    const matchCount = document.querySelector('#doc-match-count');
+    const fieldsHost = document.querySelector('#doc-fields');
+
+    const SAMPLE = `Invoice #INV-20481
+Date: 14 March 2026
+Bill to: Northwind Traders
+From: Riverstone Supplies Ltd
+
+Order summary: 3x industrial shelving units, delivery included.
+Total due: $1,240.00
+
+Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
+
+    const FIELD_PATTERNS = [
+        {
+            key: 'reference',
+            label: 'Reference / invoice number',
+            regex: /\b(?:invoice|inv|ref(?:erence)?|order)\s*[#:]?\s*([A-Z0-9-]{4,})/i,
+            extract: (m) => m[1],
+        },
+        {
+            key: 'date',
+            label: 'Date',
+            regex: /\b(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}|\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4}|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4})\b/i,
+            extract: (m) => m[1],
+        },
+        {
+            key: 'amount',
+            label: 'Amount',
+            regex: /\b(?:USD|PKR|EUR|GBP|Rs\.?|\$)\s?[\d][\d,]*\.?\d{0,2}\b/i,
+            extract: (m) => m[0],
+        },
+        {
+            key: 'email',
+            label: 'Contact email',
+            regex: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i,
+            extract: (m) => m[0],
+        },
+        {
+            key: 'phone',
+            label: 'Phone number',
+            regex: /(\+?\d[\d\s().-]{7,}\d)/,
+            extract: (m) => m[1].trim(),
+        },
+    ];
+
+    function analyze() {
+        const text = input.value.trim();
+        results.hidden = !text;
+        if (!text) return;
+
+        const found = FIELD_PATTERNS.map((field) => {
+            const match = text.match(field.regex);
+            return { ...field, value: match ? field.extract(match) : null };
+        });
+
+        const matched = found.filter((f) => f.value);
+        matchCount.textContent = `${matched.length} / ${FIELD_PATTERNS.length} fields detected`;
+
+        fieldsHost.innerHTML = found.map((field, i) => `
+            <div class="report-recommendation">
+                <span class="rank">${field.value ? '✓' : '—'}</span>
+                <div>
+                    <h3>${field.label}</h3>
+                    <p>${field.value ? field.value : 'Not found in this text'}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    analyzeBtn.addEventListener('click', analyze);
+    sampleBtn.addEventListener('click', () => {
+        input.value = SAMPLE;
+        analyze();
+    });
+})();
+
+(() => {
+    const form = document.querySelector('#maflow-lead-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const status = document.querySelector('#maflow-lead-status');
+        const name = document.querySelector('#mf-name').value.trim();
+        const workEmail = document.querySelector('#mf-email').value.trim();
+        const companyName = document.querySelector('#mf-company').value.trim();
+
+        if (!name || !workEmail || !companyName) {
+            status.style.color = '#ff9e9e';
+            status.textContent = 'Please fill in your name, work email, and company.';
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        status.style.color = '#b9c8da';
+        status.textContent = 'Sending…';
+
+        try {
+            const response = await fetch(`${await apiBase()}/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    workEmail,
+                    companyName,
+                    projectType: 'Maflow early access',
+                    message: `Requesting early access to Maflow (private beta). Company: ${companyName}.`,
+                    sourcePage: '/products.html',
+                }),
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error?.message || 'Unable to submit right now.');
+            }
+            status.style.color = '#3ee6a8';
+            status.textContent = "Thanks — we'll be in touch as soon as Maflow is ready for you.";
+            form.reset();
+        } catch (error) {
+            console.error('Maflow lead submission failed:', error);
+            status.style.color = '#ff9e9e';
+            status.textContent = 'Something went wrong. Please try again in a moment.';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+})();

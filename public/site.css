@@ -678,6 +678,54 @@ a {
     }
 }
 
+.prose h2 {
+    font: 700 1.4rem/1.2 var(--display);
+    letter-spacing: -.03em;
+    margin: 34px 0 14px;
+}
+
+.prose h2:first-child {
+    margin-top: 0;
+}
+
+.prose p {
+    margin: 0 0 18px;
+    line-height: 1.75;
+    font-size: 1rem;
+    color: var(--muted);
+}
+
+.prose p:last-child {
+    margin-bottom: 0;
+}
+
+.prose ul {
+    margin: 0 0 18px 20px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.prose li {
+    margin-bottom: 7px;
+}
+
+.prose strong {
+    color: var(--ink);
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 0 0 24px;
+}
+
+@media (max-width: 700px) {
+    .compare-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .cta {
     padding: 85px 0;
     background: linear-gradient(120deg, rgba(55, 221, 247, .1), rgba(135, 102, 255, .1));

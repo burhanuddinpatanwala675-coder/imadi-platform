@@ -1896,7 +1896,7 @@ app.get(
 
 app.get('/sitemap.xml', async (_req, res, next) => {
     try {
-        const pages = ['/', '/solutions.html', '/expertise.html', '/process.html', '/insights.html', '/case-studies.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html'];
+        const pages = ['/', '/solutions.html', '/expertise.html', '/process.html', '/insights.html', '/case-studies.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html', '/assessment.html', '/careers.html', '/how-we-build.html', '/build-vs-buy.html', '/roi-calculator.html', '/ai-demo.html', '/products.html'];
         const [posts, caseStudies] = await Promise.all([
             prisma.blogPost.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
             prisma.caseStudy.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
