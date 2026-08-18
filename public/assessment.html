@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Answer six quick questions and get a free, practical report on where AI can help your business most.">
+    <meta property="og:type" content="website"><meta property="og:title" content="AI Opportunity Assessment | Imadi Technologies"><meta property="og:description" content="Answer six quick questions and get a free, practical report on where AI can help your business most."><meta property="og:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <title>AI Opportunity Assessment | Imadi Technologies</title>
+    <link rel="stylesheet" href="site.css">
+</head>
+
+<body>
+    <header class="nav">
+        <div class="wrap navin"><a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
+            <nav class="navlinks" aria-label="Main navigation"><a href="index.html">Home</a><a
+                    href="solutions.html">Solutions</a><a href="expertise.html">Expertise</a><a
+                    href="process.html">Process</a><a href="insights.html">Insights</a><a
+                    href="contact.html">Contact</a></nav><a class="btn primary call" href="contact.html">Contact Us</a><button class="menu" aria-label="Toggle menu" aria-expanded="false">☰</button>
+        </div>
+    </header>
+    <main>
+        <section class="wrap page-hero reveal">
+            <div class="eyebrow">AI opportunity assessment</div>
+            <h1>Where does AI fit in your business?</h1>
+            <p>Answer six quick questions about how your team works today. We'll put together a short, practical
+                report on where automation and AI are likely to help most — no sales pitch, just a starting point.</p>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="wizard card" id="assessment-wizard">
+
+                    <div class="wizard-progress" id="wizard-progress" hidden>
+                        <div class="wizard-progress-label"><span id="wizard-step-label">Step 1 of 6</span></div>
+                        <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizard-progress-fill"></div></div>
+                    </div>
+
+                    <div id="wizard-questions"></div>
+
+                    <div class="wizard-actions" id="wizard-actions" hidden>
+                        <button type="button" class="btn" id="wizard-back">← Back</button>
+                        <button type="button" class="btn primary" id="wizard-continue" disabled>Continue</button>
+                    </div>
+
+                    <div id="wizard-report" hidden>
+                        <div class="report-badge" id="report-level">High opportunity</div>
+                        <h2>Your AI Opportunity Report</h2>
+                        <p class="report-summary" id="report-summary"></p>
+                        <div class="report-recommendations" id="report-recommendations"></div>
+                        <div class="wizard-actions">
+                            <button type="button" class="btn" id="report-restart">Start over</button>
+                            <button type="button" class="btn primary" id="report-continue">Get my full report by email →</button>
+                        </div>
+                    </div>
+
+                    <div id="wizard-lead" hidden>
+                        <div class="eyebrow">Almost there</div>
+                        <h2>Where should we send your report?</h2>
+                        <p class="report-summary">Share a few details and our team will follow up with a tailored
+                            breakdown of your results and next steps.</p>
+                        <form class="form" id="assessment-lead-form" novalidate>
+                            <div class="field"><label for="a-name">Name</label><input id="a-name" required
+                                    autocomplete="name"></div>
+                            <div class="field"><label for="a-email">Work email</label><input id="a-email" type="email"
+                                    required autocomplete="email"></div>
+                            <div class="field"><label for="a-company">Company</label><input id="a-company" required
+                                    autocomplete="organization"></div>
+                            <div class="field"><label for="a-phone">Phone number <span>Optional</span></label><input
+                                    id="a-phone" type="tel" autocomplete="tel"></div>
+                            <div class="field full form-actions">
+                                <button type="submit" class="btn primary">Send me my report</button>
+                            </div>
+                        </form>
+                        <p class="form-status" id="wizard-lead-status" role="status"></p>
+                    </div>
+
+                    <div id="wizard-success" hidden>
+                        <div class="report-badge">Report requested</div>
+                        <h2>Thanks — that's on its way.</h2>
+                        <p class="report-summary">We've received your assessment and a member of our team will follow
+                            up with your full breakdown and practical next steps.</p>
+                        <a class="btn primary" href="index.html">Back to home</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="wrap">
+            <div class="footer-grid">
+                <div><a class="brand" href="index.html">IMADI<small>TECHNOLOGIES</small></a>
+                    <p>Intelligent technology, made practical, secure, and measurable.</p>
+                </div>
+                <div>
+                    <div class="footer-title">Explore</div><a href="solutions.html">Solutions</a><a
+                        href="expertise.html">Expertise</a><a href="process.html">Process</a>
+                </div>
+                <div>
+                    <div class="footer-title">Connect</div><a href="contact.html">Contact</a><a
+                        href="privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="bottom"><span>© 2026 Imadi Technologies. All rights reserved.</span></div>
+        </div>
+    </footer>
+    <script src="site.js"></script>
+</body>
+
+</html>

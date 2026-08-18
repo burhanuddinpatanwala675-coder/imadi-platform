@@ -442,3 +442,270 @@ function formatArticleContent(raw) {
         console.error('Article loading failed:', error);
     }
 })();
+
+(() => {
+    const root = document.querySelector('#assessment-wizard');
+    if (!root) return;
+
+    // Rule-based scoring only — no fabricated stats or testimonials. Each
+    // answer nudges a running score for the site's four existing AI
+    // Solutions categories (see #ai-solutions on index.html) plus a
+    // separate "opportunity" score used to label how much friction the
+    // answers suggest. The report is generated entirely client-side from
+    // the visitor's own answers.
+    const CATEGORY_INFO = {
+        agents: { name: 'AI Agents', description: 'Digital agents that understand tasks, use your business tools, and help your team get work done faster.' },
+        whatsapp: { name: 'WhatsApp AI', description: 'Automate customer and operational conversations on the channel your customers already use.' },
+        documents: { name: 'Document Intelligence', description: 'Extract, classify, and validate information from documents and forms with far less manual effort.' },
+        workflow: { name: 'Workflow Automation', description: 'Connect your people, software, and AI to remove repetitive steps and keep operations moving.' },
+    };
+
+    const QUESTIONS = [
+        {
+            key: 'industry', eyebrow: 'Step 1 of 6', question: 'Which best describes your business?',
+            options: [
+                { label: 'Retail & ecommerce', weights: { whatsapp: 2, agents: 1 } },
+                { label: 'Logistics & supply chain', weights: { workflow: 2, documents: 1 } },
+                { label: 'Professional services', weights: { documents: 2, agents: 1 } },
+                { label: 'Healthcare', weights: { documents: 2 } },
+                { label: 'Education', weights: { agents: 2 } },
+                { label: 'Real estate', weights: { whatsapp: 2, agents: 1 } },
+                { label: 'Manufacturing', weights: { workflow: 2 } },
+                { label: 'Financial services', weights: { documents: 2, workflow: 1 } },
+                { label: 'Something else', weights: {} },
+            ],
+        },
+        {
+            key: 'teamSize', eyebrow: 'Step 2 of 6', question: 'How big is your team?',
+            options: [
+                { label: 'Just me', weights: {}, opportunity: 0 },
+                { label: '2–10 people', weights: {}, opportunity: 1 },
+                { label: '11–50 people', weights: { workflow: 1 }, opportunity: 2 },
+                { label: '51–200 people', weights: { workflow: 2 }, opportunity: 3 },
+                { label: '200+ people', weights: { workflow: 2 }, opportunity: 3 },
+            ],
+        },
+        {
+            key: 'repetitiveTask', eyebrow: 'Step 3 of 6', question: 'What is the single most repetitive task your team does?',
+            options: [
+                { label: 'Answering the same customer questions again and again', weights: { whatsapp: 3, agents: 2 }, opportunity: 2 },
+                { label: 'Manually processing documents, forms, or invoices', weights: { documents: 3 }, opportunity: 2 },
+                { label: 'Manually entering data between different systems', weights: { workflow: 3 }, opportunity: 2 },
+                { label: 'Scheduling, reminders, and follow-ups', weights: { agents: 2, workflow: 2 }, opportunity: 1 },
+                { label: 'Something else', weights: { agents: 1, workflow: 1 }, opportunity: 1 },
+            ],
+        },
+        {
+            key: 'software', eyebrow: 'Step 4 of 6', question: 'How would you describe the software you use today?',
+            options: [
+                { label: 'Mostly manual — spreadsheets or paper', weights: { workflow: 2, documents: 1 }, opportunity: 3 },
+                { label: 'A mix of disconnected tools', weights: { workflow: 3 }, opportunity: 2 },
+                { label: 'One core system that isn’t fully used', weights: { workflow: 1, agents: 1 }, opportunity: 1 },
+                { label: 'A modern, well-integrated stack', weights: { agents: 1 }, opportunity: 0 },
+            ],
+        },
+        {
+            key: 'channel', eyebrow: 'Step 5 of 6', question: 'Where do most of your customer conversations happen?',
+            options: [
+                { label: 'WhatsApp', weights: { whatsapp: 4 }, opportunity: 2 },
+                { label: 'Email', weights: { documents: 2, agents: 1 }, opportunity: 1 },
+                { label: 'Phone calls', weights: { agents: 3 }, opportunity: 2 },
+                { label: 'Instagram or social DMs', weights: { whatsapp: 3, agents: 1 }, opportunity: 1 },
+                { label: 'We don’t handle much customer communication', weights: { workflow: 1 }, opportunity: 0 },
+            ],
+        },
+        {
+            key: 'bottleneck', eyebrow: 'Step 6 of 6', question: 'What is the biggest bottleneck holding your business back right now?',
+            options: [
+                { label: 'Slow response times to customers', weights: { whatsapp: 2, agents: 2 }, opportunity: 2 },
+                { label: 'Too much manual admin work', weights: { documents: 2, workflow: 2 }, opportunity: 2 },
+                { label: 'Lack of visibility into what is happening', weights: { workflow: 3 }, opportunity: 2 },
+                { label: 'Inconsistent processes across the team', weights: { workflow: 2 }, opportunity: 2 },
+                { label: 'Difficulty scaling without hiring more people', weights: { agents: 3 }, opportunity: 2 },
+            ],
+        },
+    ];
+
+    const progress = document.querySelector('#wizard-progress');
+    const progressFill = document.querySelector('#wizard-progress-fill');
+    const stepLabel = document.querySelector('#wizard-step-label');
+    const questionsHost = document.querySelector('#wizard-questions');
+    const actions = document.querySelector('#wizard-actions');
+    const backBtn = document.querySelector('#wizard-back');
+    const continueBtn = document.querySelector('#wizard-continue');
+    const reportPanel = document.querySelector('#wizard-report');
+    const leadPanel = document.querySelector('#wizard-lead');
+    const successPanel = document.querySelector('#wizard-success');
+
+    let stepIndex = 0;
+    const answers = new Array(QUESTIONS.length).fill(null);
+
+    function renderStep() {
+        const step = QUESTIONS[stepIndex];
+        progress.hidden = false;
+        actions.hidden = false;
+        stepLabel.textContent = step.eyebrow;
+        progressFill.style.width = `${Math.round(((stepIndex) / QUESTIONS.length) * 100)}%`;
+
+        const selected = answers[stepIndex];
+        questionsHost.innerHTML = `
+            <div class="wizard-question">
+                <div class="eyebrow">${step.eyebrow}</div>
+                <h2>${step.question}</h2>
+                <div class="wizard-options" role="radiogroup" aria-label="${step.question}">
+                    ${step.options.map((option, i) => `
+                        <button type="button" class="wizard-option${selected === i ? ' selected' : ''}" data-index="${i}" role="radio" aria-checked="${selected === i}">${option.label}</button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        questionsHost.querySelectorAll('.wizard-option').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                answers[stepIndex] = Number(btn.dataset.index);
+                renderStep();
+            });
+        });
+
+        backBtn.style.visibility = stepIndex === 0 ? 'hidden' : 'visible';
+        continueBtn.disabled = selected === null || selected === undefined;
+        continueBtn.textContent = stepIndex === QUESTIONS.length - 1 ? 'See my results →' : 'Continue';
+    }
+
+    function computeReport() {
+        const totals = { agents: 0, whatsapp: 0, documents: 0, workflow: 0 };
+        let opportunityScore = 0;
+
+        QUESTIONS.forEach((step, i) => {
+            const option = step.options[answers[i]];
+            if (!option) return;
+            Object.entries(option.weights || {}).forEach(([key, value]) => {
+                totals[key] = (totals[key] || 0) + value;
+            });
+            if (typeof option.opportunity === 'number') opportunityScore += option.opportunity;
+        });
+
+        const ranked = Object.entries(totals)
+            .sort((a, b) => b[1] - a[1])
+            .map(([key]) => key);
+
+        let level = 'Emerging opportunity';
+        if (opportunityScore >= 8) level = 'High opportunity';
+        else if (opportunityScore >= 4) level = 'Strong opportunity';
+
+        return { ranked: ranked.slice(0, 3), level, opportunityScore };
+    }
+
+    function renderReport() {
+        progress.hidden = true;
+        actions.hidden = true;
+        questionsHost.innerHTML = '';
+        reportPanel.hidden = false;
+
+        const { ranked, level } = computeReport();
+        document.querySelector('#report-level').textContent = level;
+        document.querySelector('#report-summary').textContent =
+            'Based on your answers, here is where AI and automation are likely to create the most value for your business first.';
+
+        document.querySelector('#report-recommendations').innerHTML = ranked.map((key, i) => `
+            <div class="report-recommendation">
+                <span class="rank">${i + 1}</span>
+                <div>
+                    <h3>${CATEGORY_INFO[key].name}</h3>
+                    <p>${CATEGORY_INFO[key].description}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    continueBtn.addEventListener('click', () => {
+        if (stepIndex < QUESTIONS.length - 1) {
+            stepIndex += 1;
+            renderStep();
+        } else {
+            renderReport();
+        }
+    });
+
+    backBtn.addEventListener('click', () => {
+        if (stepIndex === 0) return;
+        stepIndex -= 1;
+        renderStep();
+    });
+
+    document.querySelector('#report-restart').addEventListener('click', () => {
+        stepIndex = 0;
+        answers.fill(null);
+        reportPanel.hidden = true;
+        renderStep();
+    });
+
+    document.querySelector('#report-continue').addEventListener('click', () => {
+        reportPanel.hidden = true;
+        leadPanel.hidden = false;
+        document.querySelector('#a-name')?.focus();
+    });
+
+    const leadForm = document.querySelector('#assessment-lead-form');
+    leadForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const status = document.querySelector('#wizard-lead-status');
+        const name = document.querySelector('#a-name').value.trim();
+        const workEmail = document.querySelector('#a-email').value.trim();
+        const companyName = document.querySelector('#a-company').value.trim();
+        const phoneNumber = document.querySelector('#a-phone').value.trim();
+
+        if (!name || !workEmail || !companyName) {
+            status.style.color = '#ff9e9e';
+            status.textContent = 'Please fill in your name, work email, and company.';
+            return;
+        }
+
+        const { ranked, level } = computeReport();
+        const summaryLines = QUESTIONS.map((step, i) => {
+            const option = step.options[answers[i]];
+            return `${step.question} ${option ? option.label : 'Not answered'}`;
+        });
+        const message = [
+            `AI Opportunity Assessment submission — ${level}.`,
+            `Top recommendations: ${ranked.map((key, i) => `${i + 1}. ${CATEGORY_INFO[key].name}`).join(' ')}`,
+            '',
+            'Answers:',
+            ...summaryLines.map((line) => `- ${line}`),
+        ].join('\n');
+
+        const submitBtn = leadForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        status.style.color = '#b9c8da';
+        status.textContent = 'Sending…';
+
+        try {
+            const response = await fetch(`${await apiBase()}/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    workEmail,
+                    companyName,
+                    phoneNumber: phoneNumber || undefined,
+                    projectType: 'AI opportunity assessment',
+                    message,
+                    sourcePage: '/assessment.html',
+                }),
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error?.message || 'Unable to submit right now.');
+            }
+            leadPanel.hidden = true;
+            successPanel.hidden = false;
+        } catch (error) {
+            console.error('Assessment submission failed:', error);
+            status.style.color = '#ff9e9e';
+            status.textContent = 'Something went wrong. Please try again in a moment.';
+            submitBtn.disabled = false;
+        }
+    });
+
+    renderStep();
+})();
