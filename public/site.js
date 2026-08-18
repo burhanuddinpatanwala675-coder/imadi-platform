@@ -67,6 +67,24 @@
                 element.hidden = false;
             }
         });
+
+        // The admin "Analytics ID" field was previously saved but never wired
+        // up to anything. Only inject a real analytics script once an ID is
+        // actually set, and only for a recognised GA4 ("G-XXXXXXX") ID — no
+        // script gets injected for an unrecognised value rather than risking
+        // a broken <script> tag.
+        const analyticsId = (settings.analyticsId || '').trim();
+        if (/^G-[A-Z0-9]+$/i.test(analyticsId) && !document.querySelector(`script[data-analytics-id="${analyticsId}"]`)) {
+            const loader = document.createElement('script');
+            loader.async = true;
+            loader.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(analyticsId)}`;
+            loader.dataset.analyticsId = analyticsId;
+            document.head.append(loader);
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', analyticsId);
+        }
     } catch (error) {
         console.warn('Settings loading failed:', error);
     }
@@ -240,39 +258,94 @@ const apiBase = async () => {
             const response = await fetch(`${await apiBase()}/api/case-studies/${encodeURIComponent(slug)}`); const result = await response.json(); if (!response.ok || !result.success) throw new Error(); const item = result.data;
             document.title = `${item.title} | Imadi Technologies`; title.textContent = item.title; document.querySelector('#case-industry').textContent = item.industry; document.querySelector('#case-client').textContent = item.clientName ? `Client: ${item.clientName}` : ''; document.querySelector('#case-challenge').textContent = item.challenge; document.querySelector('#case-solution').textContent = item.solution; document.querySelector('#case-outcomes').textContent = item.outcomes;
             const cover = document.querySelector('#case-cover'); if (item.coverImageUrl) { cover.src = item.coverImageUrl; cover.alt = item.title; cover.hidden = false; }
+            const gallery = document.querySelector('#case-gallery');
+            if (gallery && Array.isArray(item.galleryImages) && item.galleryImages.length) {
+                gallery.hidden = false;
+                item.galleryImages.forEach((url) => { const img = document.createElement('img'); img.src = url; img.alt = item.title; img.loading = 'lazy'; gallery.append(img); });
+            }
+            applySeoOverrides(item, item.outcomes);
         } catch { title.textContent = 'Case study not found'; }
     })();
 })();
 (async () => {
     const list = document.querySelector('#insights-list');
     if (!list) return;
+    const filterBar = document.querySelector('#insights-filter');
+    const pager = document.querySelector('#insights-pagination');
+    const PER_PAGE = 9;
+    let allPosts = [];
+    let activeCategory = '';
+    let activePage = 1;
+
+    function renderList() {
+        const filtered = activeCategory ? allPosts.filter((post) => post.category === activeCategory) : allPosts;
+        const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+        activePage = Math.min(activePage, pageCount);
+        const pageItems = filtered.slice((activePage - 1) * PER_PAGE, activePage * PER_PAGE);
+
+        list.replaceChildren();
+        if (!pageItems.length) {
+            list.innerHTML = '<p class="muted">No insights in this category yet.</p>';
+        } else {
+            pageItems.forEach((post) => {
+                const article = document.createElement('article');
+                article.className = 'card article reveal';
+                const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = `${post.category || 'Technology'} · ${new Date(post.publishedAt).toLocaleDateString()}`;
+                const heading = document.createElement('h2'); heading.textContent = post.title;
+                const excerpt = document.createElement('p'); excerpt.textContent = post.excerpt || '';
+                const link = document.createElement('a'); link.className = 'arrow'; link.href = `article.html?slug=${encodeURIComponent(post.slug)}`; link.textContent = 'Read article →';
+                article.append(meta, heading, excerpt, link);
+                list.appendChild(article);
+                observer.observe(article);
+            });
+        }
+
+        if (pager) {
+            pager.hidden = pageCount <= 1;
+            pager.innerHTML = '';
+            if (pageCount > 1) {
+                const prev = document.createElement('button'); prev.type = 'button'; prev.className = 'btn'; prev.textContent = '← Previous'; prev.disabled = activePage <= 1;
+                prev.addEventListener('click', () => { activePage -= 1; renderList(); window.scrollTo({ top: list.offsetTop - 100, behavior: 'smooth' }); });
+                const label = document.createElement('span'); label.className = 'muted'; label.textContent = `Page ${activePage} of ${pageCount}`;
+                const next = document.createElement('button'); next.type = 'button'; next.className = 'btn'; next.textContent = 'Next →'; next.disabled = activePage >= pageCount;
+                next.addEventListener('click', () => { activePage += 1; renderList(); window.scrollTo({ top: list.offsetTop - 100, behavior: 'smooth' }); });
+                pager.append(prev, label, next);
+            }
+        }
+    }
+
+    function renderFilters() {
+        if (!filterBar) return;
+        const categories = [...new Set(allPosts.map((post) => post.category).filter(Boolean))].sort();
+        if (categories.length < 2) { filterBar.hidden = true; return; }
+        filterBar.hidden = false;
+        filterBar.innerHTML = '';
+        const makePill = (label, value) => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'btn' + (activeCategory === value ? ' primary' : '');
+            pill.textContent = label;
+            pill.addEventListener('click', () => { activeCategory = value; activePage = 1; renderFilters(); renderList(); });
+            return pill;
+        };
+        filterBar.append(makePill('All', ''));
+        categories.forEach((category) => filterBar.append(makePill(category, category)));
+    }
 
     try {
-        const response = await fetch(`${await apiBase()}/api/blog`);
+        // Fetched once at a generous limit and paginated/filtered client-side —
+        // simple and fast at the site's current content volume. The public
+        // /api/blog endpoint also supports true server-side page/category
+        // params if the archive grows large enough to need it later.
+        const response = await fetch(`${await apiBase()}/api/blog?limit=60`);
         const result = await response.json();
-
         if (!result.success || !result.data?.items) return;
-
-        list.querySelector('.loading-card')?.remove();
-
-        console.log('BLOG POSTS:', result.data.items);
-
-        result.data.items.forEach(post => {
-            const article = document.createElement('article');
-            article.className = 'card article reveal';
-
-            const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = `${post.category || 'Technology'} · ${new Date(post.publishedAt).toLocaleDateString()}`;
-            const heading = document.createElement('h2'); heading.textContent = post.title;
-            const excerpt = document.createElement('p'); excerpt.textContent = post.excerpt || '';
-            const link = document.createElement('a'); link.className = 'arrow'; link.href = `article.html?slug=${encodeURIComponent(post.slug)}`; link.textContent = 'Read article →';
-            article.append(meta, heading, excerpt, link);
-
-            list.appendChild(article);
-            observer.observe(article);
-        });
-
+        allPosts = result.data.items;
+        renderFilters();
+        renderList();
     } catch (error) {
         console.warn('Blog loading failed:', error);
+        list.innerHTML = '<p class="muted">Insights are unavailable at the moment.</p>';
     }
 })();
 // Post content is written as plain text in a plain <textarea> in the admin
@@ -283,6 +356,22 @@ const apiBase = async () => {
 // otherwise escape it and turn each line into its own paragraph so headings
 // and paragraphs the author separated with line breaks actually show as
 // separate lines.
+// Applies an editor-set SEO title/description (from Admin > Content or
+// Admin > Case studies) to the live document once a post/case study loads.
+// Search engine crawlers won't see this (it runs after page load), but it
+// keeps the browser tab title and any client-side share/bookmark correct,
+// and falls back to the post's own excerpt/outcome when no override is set.
+function applySeoOverrides(item, fallbackDescription) {
+    if (item.seoTitle) document.title = item.seoTitle;
+    const description = item.seoDescription || fallbackDescription;
+    if (!description) return;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'description'; document.head.append(meta); }
+    meta.content = description;
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) ogDescription.content = description;
+}
+
 function formatArticleContent(raw) {
     if (!raw) return '';
     if (/<(p|h[1-6]|ul|ol|li|blockquote|div|img|table)[\s>]/i.test(raw)) return raw;
@@ -346,6 +435,8 @@ function formatArticleContent(raw) {
         }
         document.querySelector('#article-body').innerHTML =
             formatArticleContent(post.content);
+
+        applySeoOverrides(post, post.excerpt);
 
     } catch (error) {
         console.error('Article loading failed:', error);

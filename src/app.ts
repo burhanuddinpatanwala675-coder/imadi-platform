@@ -240,6 +240,12 @@ const resolvePublishedAt = (status: ContentStatus, chosenDate?: string) =>
         ? new Date(chosenDate ? `${chosenDate}T00:00:00.000Z` : Date.now())
         : null;
 
+// Optional per-page SEO overrides. Search engines truncate around these
+// lengths, so cap them here rather than letting an editor write something
+// that just gets cut off in results.
+const seoTitle = z.string().trim().max(70).nullable().optional();
+const seoDescription = z.string().trim().max(160).nullable().optional();
+
 
 const contactSchema = z.object({
     name: text,
@@ -341,6 +347,8 @@ app.post(
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
                 coverImageUrl: imageRef.nullable().optional(),
                 publishedAt: publishDate,
+                seoTitle,
+                seoDescription,
             });
 
             const data = schema.parse(req.body);
@@ -356,6 +364,8 @@ app.post(
                     coverImageUrl: data.coverImageUrl,
                     status: data.status,
                     publishedAt: resolvePublishedAt(data.status, data.publishedAt),
+                    seoTitle: data.seoTitle,
+                    seoDescription: data.seoDescription,
                     author: {
                         connect: {
                             id: req.user!.id
@@ -1356,6 +1366,8 @@ app.patch(
                 tags: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
                 coverImageUrl: imageRef.nullable().optional(),
                 publishedAt: publishDate,
+                seoTitle,
+                seoDescription,
             });
 
             const data = schema.parse(req.body);
@@ -1374,6 +1386,8 @@ app.patch(
                     tags: data.tags,
                     coverImageUrl: data.coverImageUrl,
                     publishedAt: resolvePublishedAt(data.status, data.publishedAt),
+                    seoTitle: data.seoTitle,
+                    seoDescription: data.seoDescription,
                 }
             });
 
@@ -1672,6 +1686,8 @@ const caseStudySchema = z.object({
     galleryImages: z.array(z.string().url().max(2048)).max(12).default([]),
     status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),
     publishedAt: publishDate,
+    seoTitle,
+    seoDescription,
 });
 
 app.get('/api/admin/case-studies', requireAuth([AdminRole.super_admin, AdminRole.editor]), async (_req, res, next) => {
@@ -1878,10 +1894,20 @@ app.get(
     }
 );
 
-app.get('/sitemap.xml', (_req, res) => {
-    const pages = ['/', '/solutions.html', '/expertise.html', '/process.html', '/insights.html', '/case-studies.html', '/about.html', '/contact.html'];
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((page) => `  <url><loc>${publicSiteUrl}${page}</loc></url>`).join('\n')}\n</urlset>`;
-    res.type('application/xml').send(xml);
+app.get('/sitemap.xml', async (_req, res, next) => {
+    try {
+        const pages = ['/', '/solutions.html', '/expertise.html', '/process.html', '/insights.html', '/case-studies.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html'];
+        const [posts, caseStudies] = await Promise.all([
+            prisma.blogPost.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
+            prisma.caseStudy.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
+        ]);
+        const dynamicPages = [
+            ...posts.map((post: { slug: string }) => `/article.html?slug=${post.slug}`),
+            ...caseStudies.map((item: { slug: string }) => `/case-study.html?slug=${item.slug}`),
+        ];
+        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...pages, ...dynamicPages].map((page) => `  <url><loc>${publicSiteUrl}${page}</loc></url>`).join('\n')}\n</urlset>`;
+        res.type('application/xml').send(xml);
+    } catch (e) { next(e); }
 });
 
 
