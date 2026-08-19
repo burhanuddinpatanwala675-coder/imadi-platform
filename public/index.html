@@ -14,7 +14,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <script id="org-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Imadi Technologies","description":"AI-powered software, AI agents, and automation systems that reduce manual work and help real-world businesses grow."}</script>
+    <script id="org-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Imadi Technologies","description":"AI-powered software, AI agents, and automation systems that reduce manual work and help real-world businesses grow.","founder":[{"@type":"Person","name":"Maria Aziz"},{"@type":"Person","name":"Burhanuddin Patanwala"}]}</script>
     <title>Imadi Technologies | AI-powered technology for real-world businesses.</title>
     <link rel="stylesheet" href="site.css">
     <style>
@@ -179,7 +179,11 @@
             background: radial-gradient(circle at 50% 35%, rgba(55,221,247,.18), transparent 48%), rgba(13,28,48,.48);
         }
         .founder-initial { font: 700 clamp(4rem, 9vw, 8rem)/1 var(--display); letter-spacing: -.09em; color: var(--cyan); }
-        .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; }
+        .founder-avatars { display: flex; gap: 20px; }
+        .founder-avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; background: rgba(13,28,48,.6); border: 1px solid var(--line); }
+        .founder-avatar .initial { font: 700 2.3rem var(--display); letter-spacing: -.03em; color: var(--cyan); }
+        .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; margin-top: 14px; }
+        .founder-name + .founder-name { margin-top: 4px; }
         .founder-name span { color: var(--muted); font-weight: 500; }
         .lab-banner { padding: 30px; display: flex; justify-content: space-between; align-items: center; gap: 28px; }
         .lab-banner strong { font: 700 1.45rem var(--display); }
@@ -336,17 +340,21 @@
 
             <section class="section founder-section" id="founder">
                 <div class="wrap founder-grid">
-                    <!-- Founder portrait: swap this initials block for an <img> once Maria's photo file is provided. -->
+                    <!-- Founder portraits: swap these initials blocks for <img> photos once they're provided. -->
                     <div class="founder-portrait reveal" aria-hidden="true">
-                        <div class="founder-initial">MA</div>
+                        <div class="founder-avatars">
+                            <div class="founder-avatar"><span class="initial">MA</span></div>
+                            <div class="founder-avatar"><span class="initial">BP</span></div>
+                        </div>
                     </div>
                     <div class="reveal">
-                        <div class="eyebrow">Founder & vision</div>
+                        <div class="eyebrow">Founders & vision</div>
                         <h2>Technology should solve real problems.</h2>
                         <p class="founder-name">Maria Aziz <span>· Founder & CEO, Imadi Technologies</span></p>
+                        <p class="founder-name">Burhanuddin Patanwala <span>· Co-Founder, Imadi Technologies</span></p>
                         <p>Imadi was built around a simple idea: advanced technology should be practical, understandable, and useful to the organisations that rely on it.</p>
                         <p>Our focus is bringing AI, software engineering, and thoughtful product thinking together to create systems that make meaningful work easier.</p>
-                        <a class="btn" href="about.html">Meet the founder →</a>
+                        <a class="btn" href="about.html">Meet the founders →</a>
                     </div>
                 </div>
             </section>

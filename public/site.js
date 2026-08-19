@@ -55,6 +55,7 @@
             linkedin: '#linkedin-link',
             x: '#x-link',
             linkedinFounder: '#founder-linkedin-link',
+            linkedinCofounder: '#cofounder-linkedin-link',
             instagram: '#instagram-link',
             facebook: '#facebook-link',
             tiktok: '#tiktok-link',
