@@ -393,6 +393,20 @@
                             <p>Exploring voice-driven interfaces for customer and operational conversations.</p>
                         </article>
                     </div>
+                    <div class="card reveal" style="margin-bottom:22px;padding:26px 30px">
+                        <div class="eyebrow">Get notified</div>
+                        <h3 style="font:700 1.3rem/1.2 var(--display);letter-spacing:-.02em;margin:8px 0 4px">Want to know when a Lab project ships?</h3>
+                        <p style="color:var(--muted);margin:0 0 16px;font-size:.92rem">Leave your email and we'll let you know as these move from prototype to live.</p>
+                        <form id="ai-lab-notify-form" class="newsletter-form" novalidate>
+                            <label class="sr-only" for="ai-lab-notify-email">Email address</label>
+                            <input id="ai-lab-notify-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
+                            <input type="hidden" name="firstName" value="">
+                            <label class="newsletter-consent"><input name="consent" type="checkbox" required> I agree to receive Imadi updates.</label>
+                            <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                            <button class="btn primary" type="submit">Notify me →</button>
+                            <p id="ai-lab-notify-status" class="form-status" role="status"></p>
+                        </form>
+                    </div>
                     <div class="lab-banner card reveal">
                         <div>
                             <strong>Research. Prototype. Validate. Build.</strong>

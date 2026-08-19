@@ -189,21 +189,29 @@ const apiBase = async () => {
 };
 
 (() => {
-    const form = document.querySelector('#newsletter-form');
-    if (!form) return;
-    const status = document.querySelector('#newsletter-status');
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (!form.checkValidity()) { form.reportValidity(); return; }
-        const submit = form.querySelector('button[type="submit"]');
-        submit.disabled = true; status.style.color = '#b9c8da'; status.textContent = 'Subscribing…';
-        try {
-            const response = await fetch(`${await apiBase()}/api/newsletter/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.email.value.trim(), firstName: form.firstName.value.trim() || undefined, consent: form.consent.checked, honeypot: form.website.value }) });
-            const result = await response.json();
-            if (!response.ok || !result.success) throw new Error(result.error?.message || 'Unable to subscribe right now.');
-            status.style.color = '#3ee6a8'; status.textContent = result.data?.message || 'You’re subscribed. Thank you.'; form.reset();
-        } catch (error) { status.style.color = '#ff9e9e'; status.textContent = error.message || 'Unable to subscribe right now.'; }
-        finally { submit.disabled = false; }
+    // Any form with class="newsletter-form" (the homepage newsletter signup, the
+    // AI Lab "notify me" signup, and any future ones) posts to the same
+    // subscribe endpoint — this binds the same handler to all of them so each
+    // just needs its own email/firstName/consent/website fields and a
+    // .form-status element to report into.
+    document.querySelectorAll('.newsletter-form').forEach((form) => {
+        const status = form.querySelector('.form-status');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!form.checkValidity()) { form.reportValidity(); return; }
+            const submit = form.querySelector('button[type="submit"]');
+            submit.disabled = true;
+            if (status) { status.style.color = '#b9c8da'; status.textContent = 'Subscribing…'; }
+            try {
+                const response = await fetch(`${await apiBase()}/api/newsletter/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.email.value.trim(), firstName: form.firstName.value.trim() || undefined, consent: form.consent.checked, honeypot: form.website.value }) });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.error?.message || 'Unable to subscribe right now.');
+                if (status) { status.style.color = '#3ee6a8'; status.textContent = result.data?.message || 'You’re subscribed. Thank you.'; }
+                form.reset();
+            } catch (error) {
+                if (status) { status.style.color = '#ff9e9e'; status.textContent = error.message || 'Unable to subscribe right now.'; }
+            } finally { submit.disabled = false; }
+        });
     });
 })();
 
