@@ -750,7 +750,7 @@ footer {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
     gap: 28px;
     padding-bottom: 40px;
     border-bottom: 1px solid var(--line)
@@ -828,6 +828,12 @@ footer {
 .reveal.in {
     opacity: 1;
     transform: none
+}
+
+@media(max-width:1050px) and (min-width:851px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr
+    }
 }
 
 @media(max-width:850px) {
