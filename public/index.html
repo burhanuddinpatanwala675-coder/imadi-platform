@@ -181,7 +181,9 @@
         }
         .founder-initial { font: 700 clamp(4rem, 9vw, 8rem)/1 var(--display); letter-spacing: -.09em; color: var(--cyan); }
         .founder-avatars { display: flex; gap: 20px; }
-        .founder-avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; background: rgba(13,28,48,.6); border: 1px solid var(--line); }
+        .founder-avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; background: rgba(13,28,48,.6); border: 1px solid var(--line); cursor: default; transition: transform .2s ease, border-color .2s ease; }
+        .founder-avatar[href] { cursor: pointer; }
+        .founder-avatar[href]:hover, .founder-avatar[href]:focus-visible { transform: translateY(-4px); border-color: rgba(55,221,247,.6); }
         .founder-avatar .initial { font: 700 2.3rem var(--display); letter-spacing: -.03em; color: var(--cyan); }
         .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; margin-top: 14px; }
         .founder-name + .founder-name { margin-top: 4px; }
@@ -343,10 +345,10 @@
             <section class="section founder-section" id="founder">
                 <div class="wrap founder-grid">
                     <!-- Founder portraits: swap these initials blocks for <img> photos once they're provided. -->
-                    <div class="founder-portrait reveal" aria-hidden="true">
+                    <div class="founder-portrait reveal">
                         <div class="founder-avatars">
-                            <div class="founder-avatar"><span class="initial">MA</span></div>
-                            <div class="founder-avatar"><span class="initial">BP</span></div>
+                            <a id="founder-avatar-link" class="founder-avatar" target="_blank" rel="noopener" aria-label="Maria Aziz's portfolio (opens in a new tab)"><span class="initial">MA</span></a>
+                            <a id="cofounder-avatar-link" class="founder-avatar" target="_blank" rel="noopener" aria-label="Burhanuddin Patanwala's portfolio (opens in a new tab)"><span class="initial">BP</span></a>
                         </div>
                     </div>
                     <div class="reveal">

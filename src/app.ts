@@ -1770,6 +1770,8 @@ app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), asy
                 x: socialLinkUrl,
                 linkedinFounder: socialLinkUrl,
                 linkedinCofounder: socialLinkUrl,
+                portfolioFounder: socialLinkUrl,
+                portfolioCofounder: socialLinkUrl,
                 instagram: socialLinkUrl,
                 facebook: socialLinkUrl,
                 tiktok: socialLinkUrl,

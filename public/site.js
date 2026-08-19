@@ -56,6 +56,8 @@
             x: '#x-link',
             linkedinFounder: '#founder-linkedin-link',
             linkedinCofounder: '#cofounder-linkedin-link',
+            portfolioFounder: '#founder-avatar-link',
+            portfolioCofounder: '#cofounder-avatar-link',
             instagram: '#instagram-link',
             facebook: '#facebook-link',
             tiktok: '#tiktok-link',
