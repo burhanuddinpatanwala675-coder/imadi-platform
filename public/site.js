@@ -886,8 +886,8 @@ Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
                     name,
                     workEmail,
                     companyName,
-                    projectType: 'Maflow early access',
-                    message: `Requesting early access to Maflow (private beta). Company: ${companyName}.`,
+                    projectType: 'Maflow walkthrough request',
+                    message: `Requesting a personal walkthrough of Maflow. Company: ${companyName}.`,
                     sourcePage: '/products.html',
                 }),
             });
@@ -896,7 +896,7 @@ Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
                 throw new Error(result.error?.message || 'Unable to submit right now.');
             }
             status.style.color = '#3ee6a8';
-            status.textContent = "Thanks — we'll be in touch as soon as Maflow is ready for you.";
+            status.textContent = "Thanks — we'll be in touch to set up your walkthrough.";
             form.reset();
         } catch (error) {
             console.error('Maflow lead submission failed:', error);
