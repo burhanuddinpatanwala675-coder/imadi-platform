@@ -598,6 +598,7 @@ a {
 
 .report-badge {
     display: inline-block;
+    align-self: flex-start;
     padding: 6px 14px;
     border-radius: 999px;
     border: 1px solid rgba(55, 221, 247, .4);
