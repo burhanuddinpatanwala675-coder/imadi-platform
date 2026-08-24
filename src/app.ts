@@ -1775,6 +1775,13 @@ app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), asy
                 instagram: socialLinkUrl,
                 facebook: socialLinkUrl,
                 tiktok: socialLinkUrl,
+                // Live/demo links for products shown on the Products page and the
+                // AI Lab section — each stays hidden on the site until set here.
+                maflowUrl: socialLinkUrl,
+                cfcIndexUrl: socialLinkUrl,
+                alicoUrl: socialLinkUrl,
+                erpUrl: socialLinkUrl,
+                renazUrl: socialLinkUrl,
             }).optional(),
         }).parse(req.body);
         const item = await prisma.siteSettings.update({ where: { id: 1 }, data });

@@ -61,14 +61,23 @@
             instagram: '#instagram-link',
             facebook: '#facebook-link',
             tiktok: '#tiktok-link',
+            // Product "Try it" links (Admin > Site settings > Product links).
+            // Maflow appears twice on the Products page, hence the shared class
+            // selector — everything else uses a single id.
+            maflowUrl: '.js-maflow-link',
+            cfcIndexUrl: '#cfc-prototype-link',
+            alicoUrl: '#alico-link',
+            erpUrl: '#erp-link',
+            renazUrl: '#renaz-link',
         };
         Object.entries(socialLinkTargets).forEach(([key, selector]) => {
             const url = settings.socialLinks?.[key];
-            const element = document.querySelector(selector);
-            if (element && url) {
-                element.href = url;
-                element.hidden = false;
-            }
+            document.querySelectorAll(selector).forEach((element) => {
+                if (url) {
+                    element.href = url;
+                    element.hidden = false;
+                }
+            });
         });
 
         // The admin "Analytics ID" field was previously saved but never wired
