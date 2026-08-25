@@ -277,7 +277,7 @@ const apiBase = async () => {
             const slug = new URLSearchParams(location.search).get('slug'); if (!slug) throw new Error();
             const response = await fetch(`${await apiBase()}/api/case-studies/${encodeURIComponent(slug)}`); const result = await response.json(); if (!response.ok || !result.success) throw new Error(); const item = result.data;
             document.title = `${item.title} | Imadi Technologies`; title.textContent = item.title; document.querySelector('#case-industry').textContent = item.industry; document.querySelector('#case-client').textContent = item.clientName ? `Client: ${item.clientName}` : ''; document.querySelector('#case-challenge').textContent = item.challenge; document.querySelector('#case-solution').textContent = item.solution; document.querySelector('#case-outcomes').textContent = item.outcomes;
-            const cover = document.querySelector('#case-cover'); if (item.coverImageUrl) { cover.src = item.coverImageUrl; cover.alt = item.title; cover.hidden = false; }
+            const cover = document.querySelector('#case-cover'); if (item.coverImageUrl) { cover.src = item.coverImageUrl; cover.alt = item.title; cover.hidden = false; const hero = document.querySelector('.case-study-hero'); if (hero) hero.classList.add('has-cover'); }
             const gallery = document.querySelector('#case-gallery');
             if (gallery && Array.isArray(item.galleryImages) && item.galleryImages.length) {
                 gallery.hidden = false;

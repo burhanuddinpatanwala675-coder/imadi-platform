@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import url('validation.css');
-@import url('logo.css');
 
 :root {
     --bg: #07111f;
@@ -79,8 +78,21 @@ a {
 }
 
 .brand {
+    display: inline-flex;
+    align-items: center;
     font: 700 1.3rem/1 var(--display);
     letter-spacing: .14em
+}
+
+.brand-logo {
+    display: block;
+    height: 42px;
+    width: auto
+}
+
+.footer-grid .brand-logo {
+    height: 36px;
+    margin-bottom: 4px
 }
 
 .brand small {
@@ -343,7 +355,8 @@ a {
 .whatsapp-button:hover,.whatsapp-button:focus-visible { transform:translateY(-3px); background:#42e57d; color:#07111f; }
 .whatsapp-button span:first-child { display:grid; place-items:center; width:20px; height:20px; border:2px solid currentColor; border-radius:50%; font-size:0; }
 .whatsapp-button span:first-child::after { content:'↗'; font-size:13px; line-height:1; }
-.case-study-hero { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:center; }
+.case-study-hero { display:grid; grid-template-columns:1fr; gap:28px; align-items:center; }
+.case-study-hero.has-cover { grid-template-columns:1fr 1fr; }
 .case-study-hero img { width:100%; border-radius:16px; border:1px solid var(--line); min-height:280px; object-fit:cover; }
 .case-body { display:grid; gap:18px; }
 .case-body h2 { margin:0 0 8px; }
