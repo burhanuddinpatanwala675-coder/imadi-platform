@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Imadi AI Lab: experimental AI agents, business copilots, voice and conversational systems, and document intelligence projects.">
+    <meta property="og:type" content="website"><meta property="og:title" content="AI Lab | Imadi Technologies"><meta property="og:description" content="Imadi AI Lab: experimental AI agents, business copilots, voice and conversational systems, and document intelligence projects."><meta property="og:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <title>AI Lab | Imadi Technologies</title>
+    <link rel="stylesheet" href="site.css">
+    <style>
+        .ai-agents { grid-template-columns: repeat(4, 1fr); }
+        .ai-agents .card { min-height: 245px; }
+        .lab-projects { margin-bottom: 20px; }
+        .lab-status { display: inline-block; font: 700 .72rem var(--display); letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; }
+        .lab-status.status-live { color: var(--green); background: rgba(62,230,168,.12); border: 1px solid rgba(62,230,168,.35); }
+        .lab-status.status-prototype { color: var(--cyan); background: rgba(55,221,247,.1); border: 1px solid rgba(55,221,247,.3); }
+        .lab-status.status-development { color: var(--violet); background: rgba(135,102,255,.12); border: 1px solid rgba(135,102,255,.35); }
+        .lab-status.status-research { color: var(--muted); background: rgba(154,171,193,.12); border: 1px solid rgba(154,171,193,.3); }
+        .lab-banner { padding: 30px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 28px; }
+        .lab-banner strong { font: 700 1.45rem var(--display); }
+        .lab-banner p { margin: 8px 0 0; color: var(--muted); max-width: 700px; }
+        @media (max-width: 980px) { .ai-agents { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 760px) {
+            .ai-agents { grid-template-columns: 1fr; }
+            .lab-banner { align-items: flex-start; flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="nav">
+        <div class="wrap navin">
+            <a class="brand" href="index.html" aria-label="Imadi Technologies home"><img class="brand-logo" src="assets/imadi-logo.jpg" alt="Imadi Technologies"></a>
+            <nav class="navlinks" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="solutions.html">Solutions</a>
+                <a href="ai-lab.html" aria-current="page">AI Lab</a>
+                <a href="products.html">Products</a>
+                <a href="expertise.html">Expertise</a>
+                <a href="process.html">Process</a>
+                <a href="insights.html">Insights</a>
+                <a href="case-studies.html">Case studies</a>
+                <a href="about.html">About</a>
+            </nav>
+            <a class="btn primary call" href="contact.html">Contact us</a>
+            <button class="menu" aria-label="Toggle menu" aria-expanded="false">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="wrap page-hero reveal">
+            <div class="eyebrow">Imadi AI Lab</div>
+            <h1>Exploring what AI can make possible.</h1>
+            <p>We experiment with AI agents, business copilots, voice and conversational systems, document intelligence, and new product ideas.</p>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="grid ai-agents lab-projects reveal">
+                    <a class="card reveal" href="products.html#renaz">
+                        <span class="lab-status status-live">Prototype · Live</span>
+                        <h3>AI WhatsApp Agent</h3>
+                        <p>Conversational AI that handles customer messages, qualifies leads, and hands off to your team when it matters.</p>
+                        <span class="arrow">See it in action — ReNaz →</span>
+                    </a>
+                    <article class="card reveal">
+                        <span class="lab-status status-prototype">Prototype</span>
+                        <h3>Business Copilot</h3>
+                        <p>An internal assistant that helps teams query data, draft responses, and move day-to-day work forward faster.</p>
+                    </article>
+                    <article class="card reveal">
+                        <span class="lab-status status-development">In development</span>
+                        <h3>Document Intelligence Engine</h3>
+                        <p>Extracting and validating structured data from real business documents with less manual review.</p>
+                    </article>
+                    <article class="card reveal">
+                        <span class="lab-status status-research">Research</span>
+                        <h3>Voice AI Agent</h3>
+                        <p>Exploring voice-driven interfaces for customer and operational conversations.</p>
+                    </article>
+                </div>
+                <div class="card reveal" style="margin-bottom:22px;padding:26px 30px">
+                    <div class="eyebrow">Get notified</div>
+                    <h3 style="font:700 1.3rem/1.2 var(--display);letter-spacing:-.02em;margin:8px 0 4px">Want to know when a Lab project ships?</h3>
+                    <p style="color:var(--muted);margin:0 0 16px;font-size:.92rem">Leave your email and we'll let you know as these move from prototype to live.</p>
+                    <form id="ai-lab-notify-form" class="newsletter-form" novalidate>
+                        <label class="sr-only" for="ai-lab-notify-email">Email address</label>
+                        <input id="ai-lab-notify-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
+                        <input type="hidden" name="firstName" value="">
+                        <label class="newsletter-consent"><input name="consent" type="checkbox" required> I agree to receive Imadi updates.</label>
+                        <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                        <button class="btn primary" type="submit">Notify me →</button>
+                        <p id="ai-lab-notify-status" class="form-status" role="status"></p>
+                    </form>
+                </div>
+                <div class="lab-banner card reveal">
+                    <div>
+                        <strong>Research. Prototype. Validate. Build.</strong>
+                        <p>We turn promising AI ideas into practical experiments and, when the value is proven, production-ready systems.</p>
+                    </div>
+                    <a class="btn" href="contact.html">Talk to us about an AI idea →</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <div class="footer-grid"><div>
+                    <a class="brand" href="index.html"><img class="brand-logo" src="assets/imadi-logo.jpg" alt="Imadi Technologies"></a>
+                    <p>Intelligent technology, made practical, secure, and measurable.</p>
+                    <p id="company-contact">Contact our team for verified details.</p>
+                </div><div><div class="footer-title">Explore</div><a href="solutions.html">Solutions</a><a href="products.html">Products</a><a href="expertise.html">Expertise</a><a href="process.html">Process</a><a href="insights.html">Insights</a></div><div><div class="footer-title">Resources</div><a href="how-we-build.html">How We Build</a><a href="ai-demo.html">AI Demo</a><a href="roi-calculator.html">ROI Calculator</a><a href="build-vs-buy.html">Build vs. Buy</a></div><div><div class="footer-title">Connect</div><div class="social-links"><a id="linkedin-link" href="#" target="_blank" rel="noopener" hidden aria-label="LinkedIn">in</a><a id="x-link" href="#" target="_blank" rel="noopener" hidden aria-label="X">X</a><a id="instagram-link" href="#" target="_blank" rel="noopener" hidden aria-label="Instagram">IG</a><a id="facebook-link" href="#" target="_blank" rel="noopener" hidden aria-label="Facebook">f</a><a id="tiktok-link" href="#" target="_blank" rel="noopener" hidden aria-label="TikTok">TT</a></div><a href="contact.html">Contact</a><a href="careers.html">Careers</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></div></div>
+        <div class="bottom"><span>© 2026 Imadi Technologies. All rights reserved.</span></div>
+        </div>
+    </footer>
+    <script src="site.js"></script>
+</body>
+
+</html>

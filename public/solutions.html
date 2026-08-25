@@ -8,6 +8,29 @@
     <meta property="og:type" content="website"><meta property="og:title" content="Solutions | Imadi Technologies"><meta property="og:description" content="Imadi Technologies AI, software, cloud, and cybersecurity solutions."><meta property="og:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://imadi-platform-api.onrender.com/assets/og-image.png">
     <title>Solutions | Imadi Technologies</title>
     <link rel="stylesheet" href="site.css">
+    <style>
+        .ai-showcase { padding-top: 38px; }
+        .ai-agents { grid-template-columns: repeat(4, 1fr); }
+        .ai-agents .card { min-height: 245px; }
+        .ai-assessment {
+            margin-top: 24px;
+            padding: 28px 30px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(55,221,247,.09), rgba(135,102,255,.08));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+        .ai-assessment h3 { margin: 8px 0; font: 700 1.7rem/1.05 var(--display); letter-spacing: -.04em; }
+        .ai-assessment p { margin: 0; max-width: 650px; color: var(--muted); }
+        @media (max-width: 980px) { .ai-agents { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 760px) {
+            .ai-agents { grid-template-columns: 1fr; }
+            .ai-assessment { align-items: flex-start; flex-direction: column; }
+        }
+    </style>
 </head>
 
 <body>
@@ -26,6 +49,53 @@
             <p>From better decisions to better customer experiences, Imadi builds connected systems that remove friction
                 from the way your organization operates.</p>
         </section>
+
+        <section class="section ai-showcase" id="ai-solutions">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div class="eyebrow">AI solutions</div>
+                    <h2>Give your business an intelligent workforce.</h2>
+                    <p>From customer conversations to operations and documents, we build AI systems that work alongside your team.</p>
+                </div>
+                <div class="grid ai-agents">
+                    <article class="card reveal">
+                        <div class="icon">✦</div>
+                        <h3>AI Agents</h3>
+                        <p>Digital agents that understand tasks, use business tools, and help teams get work done.</p>
+                    </article>
+                    <article class="card reveal">
+                        <div class="icon">◌</div>
+                        <h3>WhatsApp AI</h3>
+                        <p>Intelligent customer and operational workflows built around the conversations your business already has.</p>
+                    </article>
+                    <article class="card reveal">
+                        <div class="icon">◇</div>
+                        <h3>Document Intelligence</h3>
+                        <p>Extract, classify, validate and process information from documents with less manual effort.</p>
+                    </article>
+                    <article class="card reveal">
+                        <div class="icon">↗</div>
+                        <h3>Workflow Automation</h3>
+                        <p>Connect people, software and AI to eliminate repetitive steps and keep operations moving.</p>
+                    </article>
+                </div>
+                <div class="ai-assessment reveal">
+                    <div>
+                        <div class="eyebrow">AI opportunity assessment</div>
+                        <h3>Not sure where AI fits?</h3>
+                        <p>Tell us what your team does manually. We can help identify practical opportunities for automation and intelligent software.</p>
+                    </div>
+                    <a class="btn primary" href="assessment.html">Find my AI opportunities →</a>
+                </div>
+                <div class="reveal" style="margin-top:18px;display:flex;gap:26px;flex-wrap:wrap">
+                    <a href="ai-demo.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Try the AI demo →</a>
+                    <a href="roi-calculator.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Calculate your ROI →</a>
+                    <a href="how-we-build.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">How we build →</a>
+                    <a href="build-vs-buy.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Build vs. buy guide →</a>
+                </div>
+            </div>
+        </section>
+
         <section class="section">
             <div class="wrap">
                 <div class="section-head reveal">

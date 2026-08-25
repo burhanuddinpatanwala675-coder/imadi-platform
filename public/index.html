@@ -154,22 +154,6 @@
             letter-spacing: -.05em;
         }
 
-        .ai-showcase { padding-top: 38px; }
-        .ai-agents { grid-template-columns: repeat(4, 1fr); }
-        .ai-agents .card { min-height: 245px; }
-        .ai-assessment {
-            margin-top: 24px;
-            padding: 28px 30px;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(55,221,247,.09), rgba(135,102,255,.08));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 28px;
-        }
-        .ai-assessment h3 { margin: 8px 0; font: 700 1.7rem/1.05 var(--display); letter-spacing: -.04em; }
-        .ai-assessment p { margin: 0; max-width: 650px; color: var(--muted); }
         .founder-grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: 55px; align-items: center; }
         .founder-portrait {
             min-height: 390px;
@@ -189,20 +173,11 @@
         .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; margin-top: 14px; }
         .founder-name + .founder-name { margin-top: 4px; }
         .founder-name span { color: var(--muted); font-weight: 500; }
-        .lab-banner { padding: 30px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 28px; }
-        .lab-banner strong { font: 700 1.45rem var(--display); }
-        .lab-banner p { margin: 8px 0 0; color: var(--muted); max-width: 700px; }
-        .lab-projects { margin-bottom: 20px; }
-        .lab-status { display: inline-block; font: 700 .72rem var(--display); letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; }
-        .lab-status.status-live { color: var(--green); background: rgba(62,230,168,.12); border: 1px solid rgba(62,230,168,.35); }
-        .lab-status.status-prototype { color: var(--cyan); background: rgba(55,221,247,.1); border: 1px solid rgba(55,221,247,.3); }
-        .lab-status.status-development { color: var(--violet); background: rgba(135,102,255,.12); border: 1px solid rgba(135,102,255,.35); }
-        .lab-status.status-research { color: var(--muted); background: rgba(154,171,193,.12); border: 1px solid rgba(154,171,193,.3); }
         .outcome-grid { grid-template-columns: repeat(4, 1fr); }
         .outcome-grid .card { min-height: 190px; }
 
         @media (max-width: 980px) {
-            .ai-agents, .outcome-grid { grid-template-columns: repeat(2, 1fr); }
+            .outcome-grid { grid-template-columns: repeat(2, 1fr); }
             .founder-grid { grid-template-columns: 1fr; }
         }
 
@@ -223,8 +198,7 @@
                 flex-direction: column;
             }
 
-            .ai-agents, .outcome-grid { grid-template-columns: 1fr; }
-            .ai-assessment, .lab-banner { align-items: flex-start; flex-direction: column; }
+            .outcome-grid { grid-template-columns: 1fr; }
             .founder-portrait { min-height: 260px; }
         }
     </style>
@@ -237,14 +211,13 @@
             <nav class="navlinks" aria-label="Main navigation">
                 <a href="index.html" aria-current="page">Home</a>
                 <a href="solutions.html">Solutions</a>
-                <a href="#ai-lab">AI Lab</a>
+                <a href="ai-lab.html">AI Lab</a>
                 <a href="products.html">Products</a>
                 <a href="expertise.html">Expertise</a>
                 <a href="process.html">Process</a>
                 <a href="insights.html">Insights</a>
                 <a href="case-studies.html">Case studies</a>
                 <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
             </nav>
             <a class="btn primary call" href="contact.html">Contact us</a>
             <button class="menu" aria-label="Toggle menu" aria-expanded="false">☰</button>
@@ -265,52 +238,6 @@
                 <div class="home-signal">Practical AI for ambitious teams</div>
             </div>
         </section>
-
-            <section class="section ai-showcase" id="ai-solutions">
-                <div class="wrap">
-                    <div class="section-head reveal">
-                        <div class="eyebrow">AI solutions</div>
-                        <h2>Give your business an intelligent workforce.</h2>
-                        <p>From customer conversations to operations and documents, we build AI systems that work alongside your team.</p>
-                    </div>
-                    <div class="grid ai-agents">
-                        <article class="card reveal">
-                            <div class="icon">✦</div>
-                            <h3>AI Agents</h3>
-                            <p>Digital agents that understand tasks, use business tools, and help teams get work done.</p>
-                        </article>
-                        <article class="card reveal">
-                            <div class="icon">◌</div>
-                            <h3>WhatsApp AI</h3>
-                            <p>Intelligent customer and operational workflows built around the conversations your business already has.</p>
-                        </article>
-                        <article class="card reveal">
-                            <div class="icon">◇</div>
-                            <h3>Document Intelligence</h3>
-                            <p>Extract, classify, validate and process information from documents with less manual effort.</p>
-                        </article>
-                        <article class="card reveal">
-                            <div class="icon">↗</div>
-                            <h3>Workflow Automation</h3>
-                            <p>Connect people, software and AI to eliminate repetitive steps and keep operations moving.</p>
-                        </article>
-                    </div>
-                    <div class="ai-assessment reveal">
-                        <div>
-                            <div class="eyebrow">AI opportunity assessment</div>
-                            <h3>Not sure where AI fits?</h3>
-                            <p>Tell us what your team does manually. We can help identify practical opportunities for automation and intelligent software.</p>
-                        </div>
-                        <a class="btn primary" href="assessment.html">Find my AI opportunities →</a>
-                    </div>
-                    <div class="reveal" style="margin-top:18px;display:flex;gap:26px;flex-wrap:wrap">
-                        <a href="ai-demo.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Try the AI demo →</a>
-                        <a href="roi-calculator.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Calculate your ROI →</a>
-                        <a href="how-we-build.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">How we build →</a>
-                        <a href="build-vs-buy.html" style="color:var(--cyan);font-weight:700;font-size:.85rem">Build vs. buy guide →</a>
-                    </div>
-                </div>
-            </section>
 
             <section class="section">
             <div class="wrap">
@@ -363,75 +290,9 @@
                 </div>
             </section>
 
-            <section class="section" id="ai-lab">
-                <div class="wrap">
-                    <div class="section-head reveal">
-                        <div class="eyebrow">Imadi AI Lab</div>
-                        <h2>Exploring what AI can make possible.</h2>
-                        <p>We experiment with AI agents, business copilots, voice and conversational systems, document intelligence, and new product ideas.</p>
-                    </div>
-                    <div class="grid ai-agents lab-projects reveal">
-                        <a class="card reveal" href="products.html#renaz">
-                            <span class="lab-status status-live">Prototype · Live</span>
-                            <h3>AI WhatsApp Agent</h3>
-                            <p>Conversational AI that handles customer messages, qualifies leads, and hands off to your team when it matters.</p>
-                            <span class="arrow">See it in action — ReNaz →</span>
-                        </a>
-                        <article class="card reveal">
-                            <span class="lab-status status-prototype">Prototype</span>
-                            <h3>Business Copilot</h3>
-                            <p>An internal assistant that helps teams query data, draft responses, and move day-to-day work forward faster.</p>
-                        </article>
-                        <article class="card reveal">
-                            <span class="lab-status status-development">In development</span>
-                            <h3>Document Intelligence Engine</h3>
-                            <p>Extracting and validating structured data from real business documents with less manual review.</p>
-                        </article>
-                        <article class="card reveal">
-                            <span class="lab-status status-research">Research</span>
-                            <h3>Voice AI Agent</h3>
-                            <p>Exploring voice-driven interfaces for customer and operational conversations.</p>
-                        </article>
-                    </div>
-                    <div class="card reveal" style="margin-bottom:22px;padding:26px 30px">
-                        <div class="eyebrow">Get notified</div>
-                        <h3 style="font:700 1.3rem/1.2 var(--display);letter-spacing:-.02em;margin:8px 0 4px">Want to know when a Lab project ships?</h3>
-                        <p style="color:var(--muted);margin:0 0 16px;font-size:.92rem">Leave your email and we'll let you know as these move from prototype to live.</p>
-                        <form id="ai-lab-notify-form" class="newsletter-form" novalidate>
-                            <label class="sr-only" for="ai-lab-notify-email">Email address</label>
-                            <input id="ai-lab-notify-email" name="email" type="email" autocomplete="email" placeholder="Work email" required>
-                            <input type="hidden" name="firstName" value="">
-                            <label class="newsletter-consent"><input name="consent" type="checkbox" required> I agree to receive Imadi updates.</label>
-                            <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-                            <button class="btn primary" type="submit">Notify me →</button>
-                            <p id="ai-lab-notify-status" class="form-status" role="status"></p>
-                        </form>
-                    </div>
-                    <div class="lab-banner card reveal">
-                        <div>
-                            <strong>Research. Prototype. Validate. Build.</strong>
-                            <p>We turn promising AI ideas into practical experiments and, when the value is proven, production-ready systems.</p>
-                        </div>
-                        <a class="btn" href="contact.html">Talk to us about an AI idea →</a>
-                    </div>
-                </div>
-            </section>
-
             <!-- Responsible AI section intentionally withheld: per the Content Handoff doc this
                  topic is marked "do not publish until verified" pending Maria's answers on data
                  handling, human oversight, and security specifics. Add once confirmed. -->
-
-            <section class="section" id="featured-work" hidden>
-                <div class="wrap">
-                    <div class="section-head reveal">
-                        <div class="eyebrow">Proof, not promises</div>
-                        <h2>Real problems, real systems, real outcomes.</h2>
-                        <p>A look at the challenges we've solved and the technology behind them.</p>
-                    </div>
-                    <div class="grid three" id="featured-case-studies"></div>
-                    <p style="margin-top:28px"><a class="btn" href="case-studies.html">View all case studies →</a></p>
-                </div>
-            </section>
 
             <section class="section" id="newsletter">
                 <div class="wrap card newsletter-card reveal">
