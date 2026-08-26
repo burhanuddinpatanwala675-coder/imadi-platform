@@ -3,10 +3,19 @@ const $ = (selector) => document.querySelector(selector);
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 const formatDate = (value) => value ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(value)) : '—';
 
+let statusTimer = null;
 function setStatus(message = '', type = '') {
     const status = $('#dashboard-status');
     status.textContent = message;
     status.className = `status ${type}`;
+    if (statusTimer) { clearTimeout(statusTimer); statusTimer = null; }
+    if (message) {
+        statusTimer = setTimeout(() => {
+            status.textContent = '';
+            status.className = 'status';
+            statusTimer = null;
+        }, 3000);
+    }
 }
 
 async function csrf() {
