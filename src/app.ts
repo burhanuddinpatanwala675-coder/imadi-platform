@@ -1906,14 +1906,14 @@ app.get(
 
 app.get('/sitemap.xml', async (_req, res, next) => {
     try {
-        const pages = ['/', '/solutions.html', '/expertise.html', '/process.html', '/insights.html', '/case-studies.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html', '/assessment.html', '/careers.html', '/how-we-build.html', '/build-vs-buy.html', '/roi-calculator.html', '/ai-demo.html', '/products.html'];
+        const pages = ['/', '/solutions/', '/expertise/', '/process/', '/insights/', '/case-studies/', '/about/', '/contact/', '/privacy/', '/terms/', '/assessment/', '/careers/', '/how-we-build/', '/build-vs-buy/', '/roi-calculator/', '/ai-demo/', '/products/'];
         const [posts, caseStudies] = await Promise.all([
             prisma.blogPost.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
             prisma.caseStudy.findMany({ where: { status: ContentStatus.published }, select: { slug: true } }),
         ]);
         const dynamicPages = [
-            ...posts.map((post: { slug: string }) => `/article.html?slug=${post.slug}`),
-            ...caseStudies.map((item: { slug: string }) => `/case-study.html?slug=${item.slug}`),
+            ...posts.map((post: { slug: string }) => `/article/?slug=${post.slug}`),
+            ...caseStudies.map((item: { slug: string }) => `/case-study/?slug=${item.slug}`),
         ];
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...pages, ...dynamicPages].map((page) => `  <url><loc>${publicSiteUrl}${page}</loc></url>`).join('\n')}\n</urlset>`;
         res.type('application/xml').send(xml);
@@ -1964,7 +1964,8 @@ app.get(
     [
         '/',
         '/index.html',
-        '/contact.html',
+        '/contact',
+        '/contact/',
     ],
 
     async (
@@ -1980,7 +1981,7 @@ app.get(
                     ||
                     req.path === '/index.html'
                     ? 'index.html'
-                    : 'contact.html';
+                    : 'contact/index.html';
 
 
             const html =

@@ -1,4 +1,4 @@
-(() => { const icon = document.createElement('link'); icon.rel = 'icon'; icon.type = 'image/svg+xml'; icon.href = 'favicon.svg'; document.head.append(icon); })();
+(() => { const icon = document.createElement('link'); icon.rel = 'icon'; icon.type = 'image/svg+xml'; icon.href = '/favicon.svg'; document.head.append(icon); })();
 
 // Resolves the API origin the frontend should call. `config.json` holds the
 // production Render API URL so the site keeps working wherever the static
@@ -8,7 +8,7 @@
 // used automatically without needing a separate dev config file.
 let _configPromise;
 const loadConfig = () => {
-    if (!_configPromise) _configPromise = fetch('config.json').then((r) => r.json()).catch(() => ({}));
+    if (!_configPromise) _configPromise = fetch('/config.json').then((r) => r.json()).catch(() => ({}));
     return _configPromise;
 };
 const apiBase = async () => {
@@ -270,7 +270,7 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
             if (!response.ok || !result.success) throw new Error();
             list.replaceChildren();
             if (!result.data.items.length) { list.innerHTML = '<p class="muted">New case studies are on their way.</p>'; return; }
-            result.data.items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `case-study.html?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
+            result.data.items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
         } catch { list.innerHTML = '<p class="muted">Case studies are unavailable at the moment.</p>'; }
     })();
 })();
@@ -290,7 +290,7 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
             const items = result.data.items.slice(0, 3);
             if (!items.length) return;
             list.replaceChildren();
-            items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `case-study.html?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
+            items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
             if (section) section.hidden = false;
         } catch (error) { console.warn('Featured case studies loading failed:', error); }
     })();
@@ -340,7 +340,7 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
                 const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = `${post.category || 'Technology'} · ${new Date(post.publishedAt).toLocaleDateString()}`;
                 const heading = document.createElement('h2'); heading.textContent = post.title;
                 const excerpt = document.createElement('p'); excerpt.textContent = post.excerpt || '';
-                const link = document.createElement('a'); link.className = 'arrow'; link.href = `article.html?slug=${encodeURIComponent(post.slug)}`; link.textContent = 'Read article →';
+                const link = document.createElement('a'); link.className = 'arrow'; link.href = `/article/?slug=${encodeURIComponent(post.slug)}`; link.textContent = 'Read article →';
                 article.append(meta, heading, excerpt, link);
                 list.appendChild(article);
                 observer.observe(article);
@@ -736,7 +736,7 @@ function formatArticleContent(raw) {
                     phoneNumber: phoneNumber || undefined,
                     projectType: 'AI opportunity assessment',
                     message,
-                    sourcePage: '/assessment.html',
+                    sourcePage: '/assessment/',
                 }),
             });
             const result = await response.json();
@@ -932,7 +932,7 @@ Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
                     companyName,
                     projectType: 'Maflow walkthrough request',
                     message: `Requesting a personal walkthrough of Maflow. Company: ${companyName}.`,
-                    sourcePage: '/products.html',
+                    sourcePage: '/products/',
                 }),
             });
             const result = await response.json();
