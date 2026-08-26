@@ -1,9 +1,43 @@
 (() => { const icon = document.createElement('link'); icon.rel = 'icon'; icon.type = 'image/svg+xml'; icon.href = 'favicon.svg'; document.head.append(icon); })();
 
+// Resolves the API origin the frontend should call. `config.json` holds the
+// production Render API URL so the site keeps working wherever the static
+// files are served from (Render, GitHub Pages, or a custom domain). Local
+// development is detected by hostname and always talks to whatever API is
+// running on the same origin (e.g. `npm run dev`), so a local backend is
+// used automatically without needing a separate dev config file.
+let _configPromise;
+const loadConfig = () => {
+    if (!_configPromise) _configPromise = fetch('config.json').then((r) => r.json()).catch(() => ({}));
+    return _configPromise;
+};
+const apiBase = async () => {
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return '';
+    try { return (await loadConfig()).apiBaseUrl?.replace(/\/$/, '') || ''; } catch { return ''; }
+};
+
+// Render's free tier spins the API down after inactivity, so the first
+// request after a while can take 20-50s to wake it back up. Rather than let
+// a form or page look stuck or broken during that wait, this shows a
+// friendly status message if a request is taking longer than a normal
+// network round trip.
+function withWakeUpNotice(statusEl, message = 'Connecting to Imadi services — this can take up to a minute if our server is waking up…') {
+    if (!statusEl) return () => {};
+    let shown = false;
+    const timer = setTimeout(() => {
+        shown = true;
+        statusEl.style.color = '#b9c8da';
+        statusEl.textContent = message;
+    }, 3000);
+    // Only relevant if the wake-up message actually displayed and the caller
+    // hasn't already overwritten it with its own success/error text — lets
+    // the caller's own status update (set after this returns) win either way.
+    return () => { clearTimeout(timer); return shown; };
+}
+
 (async () => {
     try {
-        const config = await fetch('config.json').then(r => r.json());
-        const response = await fetch(`${config.apiBaseUrl}/api/settings/public`);
+        const response = await fetch(`${await apiBase()}/api/settings/public`);
         const result = await response.json();
 
         if (!result.success) return;
@@ -105,11 +139,7 @@ if (menu) { menu.addEventListener('click', () => { const open = nav.classList.to
 const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target) } }), { threshold: .1 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 (() => {
     const form = document.querySelector('#contact-form'); if (!form) return; const controls = [...form.querySelectorAll('input,select,textarea')]; const messageFor = field => { const label = field.closest('.field')?.querySelector('label')?.textContent || 'This field'; const value = field.value.trim(); if (!value) return `${label} is required.`; if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid work email.'; return '' }; const validate = field => { const wrapper = field.closest('.field'); if (!wrapper) return true; const message = messageFor(field); let note = wrapper.querySelector('.validation-message'); if (!note) { note = document.createElement('small'); note.className = 'validation-message'; note.setAttribute('aria-live', 'polite'); wrapper.append(note) } wrapper.classList.toggle('has-error', Boolean(message)); wrapper.classList.toggle('is-valid', !message); field.setAttribute('aria-invalid', String(Boolean(message))); note.textContent = message || 'Looks good.'; return !message }; controls.forEach(field => { field.addEventListener('blur', () => validate(field)); field.addEventListener('input', () => { if (field.closest('.field').classList.contains('has-error')) validate(field) }); field.addEventListener('change', () => validate(field)) }); form.addEventListener('submit', async e => {
-        e.preventDefault(); const valid = controls.map(validate).every(Boolean), status = document.querySelector('#form-status'); if (!valid) { status.style.color = '#ff9e9e'; status.textContent = 'Please review the highlighted fields.'; controls.find(f => f.getAttribute('aria-invalid') === 'true')?.focus(); return } try {
-
-            const config = await fetch('config.json')
-                .then(r => r.json());
-
+        e.preventDefault(); const valid = controls.map(validate).every(Boolean), status = document.querySelector('#form-status'); if (!valid) { status.style.color = '#ff9e9e'; status.textContent = 'Please review the highlighted fields.'; controls.find(f => f.getAttribute('aria-invalid') === 'true')?.focus(); return } const clearWakeUpNotice = withWakeUpNotice(status); try {
 
             const formData = {
 
@@ -142,7 +172,7 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
 
 
             const response = await fetch(
-                `${config.apiBaseUrl}/api/contact`,
+                `${await apiBase()}/api/contact`,
                 {
                     method: "POST",
                     headers: {
@@ -189,13 +219,9 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
                 status.textContent =
                     'Something went wrong. Please try again.';
 
-            } form.querySelectorAll('.field').forEach(f => { f.classList.remove('has-error', 'is-valid'); f.querySelector('.validation-message')?.remove() })
+            } finally { clearWakeUpNotice() } form.querySelectorAll('.field').forEach(f => { f.classList.remove('has-error', 'is-valid'); f.querySelector('.validation-message')?.remove() })
     }, true)
 })();
-
-const apiBase = async () => {
-    try { return (await fetch('config.json').then((r) => r.json())).apiBaseUrl?.replace(/\/$/, '') || ''; } catch { return ''; }
-};
 
 (() => {
     // Any form with class="newsletter-form" (the homepage newsletter signup, the
@@ -211,6 +237,7 @@ const apiBase = async () => {
             const submit = form.querySelector('button[type="submit"]');
             submit.disabled = true;
             if (status) { status.style.color = '#b9c8da'; status.textContent = 'Subscribing…'; }
+            const clearWakeUpNotice = withWakeUpNotice(status);
             try {
                 const response = await fetch(`${await apiBase()}/api/newsletter/subscribe`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.email.value.trim(), firstName: form.firstName.value.trim() || undefined, consent: form.consent.checked, honeypot: form.website.value }) });
                 const result = await response.json();
@@ -219,7 +246,7 @@ const apiBase = async () => {
                 form.reset();
             } catch (error) {
                 if (status) { status.style.color = '#ff9e9e'; status.textContent = error.message || 'Unable to subscribe right now.'; }
-            } finally { submit.disabled = false; }
+            } finally { clearWakeUpNotice(); submit.disabled = false; }
         });
     });
 })();
@@ -418,10 +445,8 @@ function formatArticleContent(raw) {
             return;
         }
 
-        const config = await fetch('config.json').then(r => r.json());
-
         const response = await fetch(
-            `${config.apiBaseUrl}/api/blog/${slug}`
+            `${await apiBase()}/api/blog/${slug}`
         );
 
         const result = await response.json();
@@ -699,6 +724,7 @@ function formatArticleContent(raw) {
         status.style.color = '#b9c8da';
         status.textContent = 'Sending…';
 
+        const clearWakeUpNotice = withWakeUpNotice(status);
         try {
             const response = await fetch(`${await apiBase()}/api/contact`, {
                 method: 'POST',
@@ -724,7 +750,7 @@ function formatArticleContent(raw) {
             status.style.color = '#ff9e9e';
             status.textContent = 'Something went wrong. Please try again in a moment.';
             submitBtn.disabled = false;
-        }
+        } finally { clearWakeUpNotice(); }
     });
 
     renderStep();
@@ -895,6 +921,7 @@ Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
         status.style.color = '#b9c8da';
         status.textContent = 'Sending…';
 
+        const clearWakeUpNotice = withWakeUpNotice(status);
         try {
             const response = await fetch(`${await apiBase()}/api/contact`, {
                 method: 'POST',
@@ -920,6 +947,7 @@ Questions? Contact billing@riverstonesupplies.com or call (415) 555-0138.`;
             status.style.color = '#ff9e9e';
             status.textContent = 'Something went wrong. Please try again in a moment.';
         } finally {
+            clearWakeUpNotice();
             submitBtn.disabled = false;
         }
     });

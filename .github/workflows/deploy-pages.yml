@@ -1,0 +1,59 @@
+name: Deploy frontend to GitHub Pages
+
+# This site's frontend (everything in /public) is a plain multi-page
+# HTML/CSS/JS site with no framework and no build step — every route is a
+# real .html file, so this workflow just publishes /public as-is. It does
+# NOT touch the backend/API or database, which stay on Render.
+#
+# Runs automatically on every push to main that touches /public, and can
+# also be triggered manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Avoid two deploys racing each other; let a newer push cancel an older
+# in-flight deploy rather than queueing behind it.
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The /admin dashboard talks to the API with relative paths
+      # (e.g. fetch('/api/csrf')) and relies on same-origin cookies for
+      # login, so it only works when served from the same host as the API.
+      # It stays reachable at https://imadi-platform-api.onrender.com/admin
+      # (Render keeps serving the full /public folder, admin included,
+      # exactly as it does today) — it is deliberately left out of the
+      # GitHub Pages copy rather than publishing a version of it that would
+      # silently fail to log in on the new domain.
+      - name: Prepare public frontend for Pages (excluding /admin)
+        run: |
+          mkdir -p pages-dist
+          rsync -a --exclude 'admin' public/ pages-dist/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
