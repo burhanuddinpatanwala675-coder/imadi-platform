@@ -1775,6 +1775,7 @@ app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), asy
                 instagram: socialLinkUrl,
                 facebook: socialLinkUrl,
                 tiktok: socialLinkUrl,
+                youtube: socialLinkUrl,
                 // Live/demo links for products shown on the Products page and the
                 // AI Lab section — each stays hidden on the site until set here.
                 maflowUrl: socialLinkUrl,

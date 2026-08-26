@@ -95,6 +95,7 @@ function withWakeUpNotice(statusEl, message = 'Connecting to Imadi services — 
             instagram: '#instagram-link',
             facebook: '#facebook-link',
             tiktok: '#tiktok-link',
+            youtube: '#youtube-link',
             // Product "Try it" links (Admin > Site settings > Product links).
             // Maflow appears twice on the Products page, hence the shared class
             // selector — everything else uses a single id.
