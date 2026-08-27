@@ -41,11 +41,6 @@ const origins = (
     .map((origin) => origin.trim())
     .filter(Boolean);
 
-// TEMPORARY DIAGNOSTIC — remove once the CORS origin mismatch is resolved.
-console.log('[cors-debug] NODE_ENV:', JSON.stringify(process.env.NODE_ENV));
-console.log('[cors-debug] raw ALLOWED_ORIGINS env:', JSON.stringify(process.env.ALLOWED_ORIGINS));
-console.log('[cors-debug] parsed origins array:', JSON.stringify(origins));
-
 if (production) {
     if (!process.env.DATABASE_URL) {
         throw new Error('DATABASE_URL must be configured in production.');
@@ -91,12 +86,6 @@ const corsOptions = {
 // Handle browser preflight requests before parsing a body or applying rate
 // limits. This is especially important when the static Netlify site calls the
 // API on a different origin.
-// TEMPORARY DIAGNOSTIC — remove once the CORS origin mismatch is resolved.
-app.use((req, res, next) => {
-    console.log('[cors-debug] incoming Origin header:', JSON.stringify(req.headers.origin), 'path:', req.path);
-    next();
-});
-
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
