@@ -91,6 +91,12 @@ const corsOptions = {
 // Handle browser preflight requests before parsing a body or applying rate
 // limits. This is especially important when the static Netlify site calls the
 // API on a different origin.
+// TEMPORARY DIAGNOSTIC — remove once the CORS origin mismatch is resolved.
+app.use((req, res, next) => {
+    console.log('[cors-debug] incoming Origin header:', JSON.stringify(req.headers.origin), 'path:', req.path);
+    next();
+});
+
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
