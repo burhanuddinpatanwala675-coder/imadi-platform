@@ -41,6 +41,11 @@ const origins = (
     .map((origin) => origin.trim())
     .filter(Boolean);
 
+// TEMPORARY DIAGNOSTIC — remove once the CORS origin mismatch is resolved.
+console.log('[cors-debug] NODE_ENV:', JSON.stringify(process.env.NODE_ENV));
+console.log('[cors-debug] raw ALLOWED_ORIGINS env:', JSON.stringify(process.env.ALLOWED_ORIGINS));
+console.log('[cors-debug] parsed origins array:', JSON.stringify(origins));
+
 if (production) {
     if (!process.env.DATABASE_URL) {
         throw new Error('DATABASE_URL must be configured in production.');
