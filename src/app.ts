@@ -256,6 +256,9 @@ const contactSchema = z.object({
     budgetRange: z.string().max(120).optional(),
     message: z.string().trim().min(10).max(5000).transform(clean),
     sourcePage: z.string().max(512).default('/'),
+    website: z.string().trim().max(300).optional(),
+    toolsUsed: z.string().trim().max(500).optional(),
+    timeline: z.string().max(120).optional(),
     honeypot: z.string().max(0).optional(),
 });
 
@@ -692,8 +695,8 @@ app.get('/api/case-studies', async (_req, res, next) => {
     try {
         const items = await prisma.caseStudy.findMany({
             where: { status: ContentStatus.published },
-            orderBy: { publishedAt: 'desc' },
-            select: { id: true, title: true, slug: true, clientName: true, industry: true, challenge: true, outcomes: true, coverImageUrl: true, publishedAt: true },
+            orderBy: [{ featured: 'desc' }, { publishedAt: 'desc' }],
+            select: { id: true, title: true, slug: true, clientName: true, industry: true, projectType: true, featured: true, challenge: true, solution: true, outcomes: true, technologies: true, impactHeadline: true, coverImageUrl: true, publishedAt: true },
         });
         success(res, { items });
     } catch (e) { next(e); }
@@ -1679,9 +1682,41 @@ const caseStudySchema = z.object({
     slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(140),
     clientName: z.string().trim().max(160).nullable().optional(),
     industry: text,
+    // Project-type category, used to drive the filter pills on the public
+    // /case-studies/ index. A fixed vocabulary so filtering stays reliable.
+    projectType: z.enum(['AI & Automation', 'SaaS Products', 'Operations', 'E-commerce', 'Social Impact', 'Custom Software']).nullable().optional(),
+    // Marks a case study for prominent placement — featured items sort first
+    // on both the homepage proof section and the case-studies index.
+    featured: z.boolean().default(false),
+    // One-sentence hero summary. Optional — the hero just omits it when blank.
+    summary: z.string().trim().max(240).nullable().optional(),
     challenge: z.string().trim().min(10).max(10000),
+    // Why solving this problem mattered. Optional — hides the "Opportunity"
+    // section on the public page until filled in.
+    opportunity: z.string().trim().max(10000).nullable().optional(),
     solution: z.string().trim().min(10).max(10000),
     outcomes: z.string().trim().min(10).max(10000),
+    // Optional structured proof points — only ever set by a human in this
+    // form. technologies stays an empty list (hides the "Technology"
+    // section on the public page) and impactHeadline stays null (hides the
+    // "Impact" highlight) until someone actually fills them in.
+    technologies: z.array(z.string().trim().min(1).max(60)).max(12).default([]),
+    impactHeadline: z.string().trim().max(160).nullable().optional(),
+    // "How it works" workflow steps and "Key features" bullets — both plain
+    // ordered lists, hidden on the public page until someone fills them in.
+    howItWorks: z.array(z.string().trim().min(1).max(120)).max(10).default([]),
+    keyFeatures: z.array(z.string().trim().min(1).max(200)).max(12).default([]),
+    // Evidence-framework fields — every one optional, plain text an admin
+    // has confirmed is true. processImprovements/beforeState/afterState are
+    // bullet lists; scaleMetrics/impactMetrics are "Label: Value" lines
+    // rendered as stat cards. All hidden on the public page until filled in.
+    processImprovements: z.array(z.string().trim().min(1).max(200)).max(12).default([]),
+    beforeState: z.array(z.string().trim().min(1).max(160)).max(10).default([]),
+    afterState: z.array(z.string().trim().min(1).max(160)).max(10).default([]),
+    scaleMetrics: z.array(z.string().trim().min(1).max(120)).max(10).default([]),
+    impactMetrics: z.array(z.string().trim().min(1).max(120)).max(10).default([]),
+    // Optional forward-looking note on scalability/roadmap for this project.
+    whatsNext: z.string().trim().max(2000).nullable().optional(),
     coverImageUrl: imageRef.nullable().optional(),
     galleryImages: z.array(z.string().url().max(2048)).max(12).default([]),
     status: z.nativeEnum(ContentStatus).default(ContentStatus.draft),

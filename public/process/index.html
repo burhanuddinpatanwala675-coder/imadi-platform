@@ -13,7 +13,19 @@
         .capabilities .card { min-height: 252px; }
         .capabilities .card h3 { margin-top: 22px; }
         .outcome-grid { grid-template-columns: repeat(4, 1fr); }
-        .outcome-grid .card { min-height: 190px; }
+        .outcome-grid .card { min-height: 190px; position: relative; }
+        @media (min-width: 981px) {
+            .outcome-grid .card:not(:last-child)::after {
+                content: "→";
+                position: absolute;
+                top: 50%;
+                right: -22px;
+                transform: translateY(-50%);
+                color: var(--cyan);
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+        }
         @media (max-width: 980px) { .outcome-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 760px) { .outcome-grid { grid-template-columns: 1fr; } }
     </style>
@@ -62,10 +74,10 @@
                     <p>Every engagement starts with the problem, the workflow, and the outcome you want. Then we choose the right combination of AI, automation, software and infrastructure.</p>
                 </div>
                 <div class="grid capabilities outcome-grid">
-                    <div class="card reveal"><h3>01 · Understand</h3><p>Map the current process, friction points, data and business goals.</p></div>
-                    <div class="card reveal"><h3>02 · Identify</h3><p>Find where AI and automation can create measurable value.</p></div>
-                    <div class="card reveal"><h3>03 · Build</h3><p>Design and engineer a secure solution around the real workflow.</p></div>
-                    <div class="card reveal"><h3>04 · Improve</h3><p>Measure, learn and evolve the system as the organisation grows.</p></div>
+                    <div class="card reveal"><h3>01 · Understand</h3><p>We learn how your business currently works and where friction exists.</p></div>
+                    <div class="card reveal"><h3>02 · Identify</h3><p>We identify opportunities where automation, AI, or better software can create meaningful value.</p></div>
+                    <div class="card reveal"><h3>03 · Build</h3><p>We design and develop a practical solution around your actual workflows.</p></div>
+                    <div class="card reveal"><h3>04 · Improve</h3><p>We measure, refine, and evolve the system as your business changes.</p></div>
                 </div>
             </div>
         </section>

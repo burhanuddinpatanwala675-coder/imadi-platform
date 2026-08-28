@@ -86,6 +86,12 @@ model ContactInquiry {
   message     String
   sourcePage  String
 
+  // Optional context captured by the expanded contact form — none of these
+  // are required, so older submissions simply have them as null.
+  website   String?
+  toolsUsed String?
+  timeline  String?
+
   status InquiryStatus @default(new)
 
   assignedToId String?
@@ -149,9 +155,68 @@ model CaseStudy {
   clientName String?
   industry   String
 
+  // Project-type category driving the filter pills on the public
+  // /case-studies/ index (AI & Automation, SaaS Products, Operations,
+  // E-commerce, Social Impact, Custom Software). Optional — hides from
+  // every filter until set.
+  projectType String?
+
+  // Marks a case study for prominent placement — featured items sort first
+  // on both the homepage proof section and the case-studies index.
+  featured Boolean @default(false)
+
+  // One-sentence hero summary shown under the title on the case-study page.
+  // Optional — the hero just omits it when blank.
+  summary String?
+
   challenge String
-  solution  String
-  outcomes  String
+
+  // Why solving this problem mattered — shown in its own "Opportunity"
+  // section on the case-study page, between Challenge and Solution.
+  opportunity String?
+
+  solution String
+  outcomes String
+
+  // Optional structured proof points. Both stay empty/hidden on the public
+  // site until an admin actually fills them in — technologies is a plain
+  // list (e.g. ["n8n", "OpenAI", "WhatsApp Business API"]), impactHeadline
+  // is a single verified metric line (e.g. "70% reduction in manual
+  // processing"). Never auto-generated — only ever set by a human in the
+  // admin dashboard.
+  technologies   String[] @default([])
+  impactHeadline String?
+
+  // Optional "How it works" workflow steps (e.g. ["Input", "Processing",
+  // "AI/Automation", "Human review", "Result"]) and "Key features" bullets.
+  // Both are plain ordered lists entered one item per line in the admin
+  // dashboard; the section is hidden on the public page when empty.
+  howItWorks  String[] @default([])
+  keyFeatures String[] @default([])
+
+  // Evidence-framework fields — every one is optional, plain human-entered
+  // text, and hidden on the public page until filled in. None of these are
+  // ever auto-generated or estimated; they only ever hold what an admin has
+  // confirmed is true (a verified figure, or something they can calculate
+  // from real records). Nothing here should be a guess.
+  //
+  // processImprovements: bullets describing what manual/duplicate work was
+  // removed or what systems got connected (e.g. "Order data no longer
+  // re-typed between the store and the accounting system").
+  processImprovements String[] @default([])
+  // beforeState / afterState: paired bullet lists for a "Before vs After"
+  // comparison — plain descriptions, numbers only where genuinely known.
+  beforeState String[] @default([])
+  afterState  String[] @default([])
+  // scaleMetrics / impactMetrics: short "Label: Value" lines (one per line
+  // in the admin form), rendered as stat cards — scaleMetrics covers size
+  // (users, transactions, documents, workflows), impactMetrics covers
+  // measured results (time saved, processing speed, error reduction, etc).
+  scaleMetrics  String[] @default([])
+  impactMetrics String[] @default([])
+
+  // Optional forward-looking note on scalability/roadmap for this project.
+  whatsNext String?
 
   coverImageUrl String?
   galleryImages String[]

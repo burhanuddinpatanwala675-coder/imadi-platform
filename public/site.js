@@ -154,13 +154,22 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
                     document.querySelector('#company').value,
 
                 phoneNumber:
-                    document.querySelector('#phone').value,
+                    document.querySelector('#phone')?.value || undefined,
+
+                website:
+                    document.querySelector('#website')?.value || undefined,
 
                 projectType:
                     document.querySelector('#project').value,
 
                 budgetRange:
                     document.querySelector('#budget').value,
+
+                toolsUsed:
+                    document.querySelector('#toolsUsed')?.value || undefined,
+
+                timeline:
+                    document.querySelector('#timeline')?.value || undefined,
 
                 message:
                     document.querySelector('#message').value,
@@ -265,35 +274,112 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
 (() => {
     const list = document.querySelector('#case-studies-list');
     if (!list) return;
+    const filterBar = document.querySelector('#case-studies-filter');
+    // Fixed set of categories the business wants surfaced as filters, shown
+    // in this order regardless of how many published case studies currently
+    // exist in each — filtering is otherwise purely client-side over the
+    // (small, CMS-driven) set of published case studies.
+    const CATEGORIES = ['AI & Automation', 'SaaS Products', 'Operations', 'E-commerce', 'Social Impact', 'Custom Software'];
+    const truncate = (text, max) => (text && text.length > max ? `${text.slice(0, max - 1).trim()}…` : text || '');
+    const addField = (card, label, text) => { if (!text) return; const l = document.createElement('p'); l.className = 'proof-label'; l.textContent = label; const p = document.createElement('p'); p.textContent = text; card.append(l, p); };
+    let allItems = [];
+    let activeCategory = '';
+
+    function renderList() {
+        const filtered = activeCategory ? allItems.filter((item) => item.projectType === activeCategory) : allItems;
+        list.replaceChildren();
+        if (!filtered.length) { list.innerHTML = `<p class="muted">${activeCategory ? 'No case studies in this category yet.' : 'New case studies are on their way.'}</p>`; return; }
+        filtered.forEach((item) => {
+            const card = document.createElement('article'); card.className = 'card proof-card reveal';
+            const tag = document.createElement('div'); tag.className = 'meta';
+            tag.textContent = item.featured ? `${item.industry} · Featured` : item.industry;
+            const title = document.createElement('h2'); title.textContent = item.title;
+            card.append(tag, title);
+            addField(card, 'The challenge', truncate(item.challenge, 150));
+            addField(card, 'What we built', truncate(item.solution, 150));
+            if (Array.isArray(item.technologies) && item.technologies.length) {
+                const label = document.createElement('p'); label.className = 'proof-label'; label.textContent = 'Technology';
+                const chips = document.createElement('div'); chips.className = 'tech-list';
+                item.technologies.forEach((tech) => { const chip = document.createElement('span'); chip.className = 'tech-chip'; chip.textContent = tech; chips.append(chip); });
+                card.append(label, chips);
+            }
+            addField(card, 'Outcome', truncate(item.impactHeadline || item.outcomes, 150));
+            const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →';
+            card.append(link);
+            list.append(card); observer.observe(card);
+        });
+    }
+
+    function renderFilters() {
+        if (!filterBar) return;
+        const present = new Set(allItems.map((item) => item.projectType).filter(Boolean));
+        const categories = CATEGORIES.filter((category) => present.has(category));
+        if (categories.length < 2) { filterBar.hidden = true; return; }
+        filterBar.hidden = false;
+        filterBar.innerHTML = '';
+        const makePill = (label, value) => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'btn' + (activeCategory === value ? ' primary' : '');
+            pill.textContent = label;
+            pill.addEventListener('click', () => { activeCategory = value; renderFilters(); renderList(); });
+            return pill;
+        };
+        filterBar.append(makePill('All', ''));
+        categories.forEach((category) => filterBar.append(makePill(category, category)));
+    }
+
     (async () => {
         try {
             const response = await fetch(`${await apiBase()}/api/case-studies`); const result = await response.json();
             if (!response.ok || !result.success) throw new Error();
-            list.replaceChildren();
-            if (!result.data.items.length) { list.innerHTML = '<p class="muted">New case studies are on their way.</p>'; return; }
-            result.data.items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
+            allItems = result.data.items;
+            renderFilters();
+            renderList();
         } catch { list.innerHTML = '<p class="muted">Case studies are unavailable at the moment.</p>'; }
     })();
 })();
 
 (() => {
-    // Homepage "featured work" teaser: pulls the same published case studies
-    // from the CMS and shows up to 3. The section starts hidden and only
-    // reveals once there's real published work to show, so nothing empty or
-    // fabricated is ever displayed before Maria adds real case studies.
-    const list = document.querySelector('#featured-case-studies');
+    // Homepage "Built Around Real Business Problems" proof section: pulls
+    // published case studies from the CMS (added via the admin dashboard)
+    // and shows up to 6, each with its real industry, challenge, what was
+    // built, key technologies and outcome. The section starts hidden and
+    // only reveals once there's real published work to show, so nothing
+    // fabricated or empty is ever displayed before an admin adds a real
+    // case study.
+    const list = document.querySelector('#proof-work-list');
     if (!list) return;
-    const section = document.querySelector('#featured-work');
+    const section = document.querySelector('#proof-work');
+    const truncate = (text, max) => (text && text.length > max ? `${text.slice(0, max - 1).trim()}…` : text || '');
+    const addField = (card, label, text) => { if (!text) return; const l = document.createElement('p'); l.className = 'proof-label'; l.textContent = label; const p = document.createElement('p'); p.textContent = text; card.append(l, p); };
     (async () => {
         try {
             const response = await fetch(`${await apiBase()}/api/case-studies`); const result = await response.json();
             if (!response.ok || !result.success) throw new Error();
-            const items = result.data.items.slice(0, 3);
+            const items = result.data.items.slice(0, 6);
             if (!items.length) return;
             list.replaceChildren();
-            items.forEach((item) => { const card = document.createElement('article'); card.className = 'card article reveal'; const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.industry; const title = document.createElement('h2'); title.textContent = item.title; const summary = document.createElement('p'); summary.textContent = item.outcomes; const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read case study →'; card.append(tag, title, summary, link); list.append(card); observer.observe(card); });
+            items.forEach((item) => {
+                const card = document.createElement('article'); card.className = 'card proof-card reveal';
+                const tag = document.createElement('div'); tag.className = 'meta'; tag.textContent = item.featured ? `${item.industry} · Featured` : item.industry;
+                const title = document.createElement('h3'); title.textContent = item.title;
+                card.append(tag, title);
+                addField(card, 'Challenge', truncate(item.challenge, 140));
+                addField(card, 'What we built', truncate(item.solution, 140));
+                if (Array.isArray(item.technologies) && item.technologies.length) {
+                    const label = document.createElement('p'); label.className = 'proof-label'; label.textContent = 'Key technologies';
+                    const chips = document.createElement('div'); chips.className = 'tech-list';
+                    item.technologies.forEach((tech) => { const chip = document.createElement('span'); chip.className = 'tech-chip'; chip.textContent = tech; chips.append(chip); });
+                    card.append(label, chips);
+                }
+                addField(card, 'Outcome', truncate(item.impactHeadline || item.outcomes, 140));
+                const link = document.createElement('a'); link.className = 'arrow'; link.href = `/case-study/?slug=${encodeURIComponent(item.slug)}`; link.textContent = 'Read the full case study →';
+                card.append(link);
+                list.append(card); observer.observe(card);
+            });
             if (section) section.hidden = false;
-        } catch (error) { console.warn('Featured case studies loading failed:', error); }
+        } catch (error) { console.warn('Case studies proof section loading failed:', error); }
     })();
 })();
 
@@ -302,9 +388,28 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
     if (!title) return;
     (async () => {
         try {
+            const renderStatGrid = (grid, lines) => { if (!grid || !Array.isArray(lines) || !lines.length) return; grid.hidden = false; lines.forEach((line) => { const idx = line.indexOf(':'); const label = idx > -1 ? line.slice(0, idx).trim() : line; const value = idx > -1 ? line.slice(idx + 1).trim() : ''; const card = document.createElement('div'); card.className = 'stat-card'; const valueEl = document.createElement('span'); valueEl.className = 'stat-value'; valueEl.textContent = value || label; const labelEl = document.createElement('span'); labelEl.className = 'stat-label'; labelEl.textContent = value ? label : ''; card.append(valueEl, labelEl); grid.append(card); }); };
             const slug = new URLSearchParams(location.search).get('slug'); if (!slug) throw new Error();
             const response = await fetch(`${await apiBase()}/api/case-studies/${encodeURIComponent(slug)}`); const result = await response.json(); if (!response.ok || !result.success) throw new Error(); const item = result.data;
-            document.title = `${item.title} | Imadi Technologies`; title.textContent = item.title; document.querySelector('#case-industry').textContent = item.industry; document.querySelector('#case-client').textContent = item.clientName ? `Client: ${item.clientName}` : ''; document.querySelector('#case-challenge').textContent = item.challenge; document.querySelector('#case-solution').textContent = item.solution; document.querySelector('#case-outcomes').textContent = item.outcomes;
+            document.title = `${item.title} | Imadi Technologies`; title.textContent = item.title; document.querySelector('#case-industry').textContent = item.industry; document.querySelector('#case-client').textContent = item.clientName ? `Client: ${item.clientName}` : ''; const projectTypeEl = document.querySelector('#case-project-type'); if (projectTypeEl && item.projectType) { projectTypeEl.textContent = `Project type: ${item.projectType}`; projectTypeEl.hidden = false; } document.querySelector('#case-summary').textContent = item.summary || ''; document.querySelector('#case-challenge').textContent = item.challenge; document.querySelector('#case-solution').textContent = item.solution; document.querySelector('#case-outcomes').textContent = item.outcomes;
+            const impact = document.querySelector('#case-impact'); if (impact && item.impactHeadline) { impact.textContent = item.impactHeadline; impact.hidden = false; }
+            renderStatGrid(document.querySelector('#case-impact-metrics'), item.impactMetrics);
+            const opportunitySection = document.querySelector('#case-opportunity-section');
+            if (opportunitySection && item.opportunity) { opportunitySection.hidden = false; document.querySelector('#case-opportunity').textContent = item.opportunity; }
+            const whatsNextSection = document.querySelector('#case-whats-next-section');
+            if (whatsNextSection && item.whatsNext) { whatsNextSection.hidden = false; document.querySelector('#case-whats-next').textContent = item.whatsNext; }
+            const workflowSection = document.querySelector('#case-how-it-works-section'); const workflowList = document.querySelector('#case-how-it-works');
+            if (workflowSection && workflowList && Array.isArray(item.howItWorks) && item.howItWorks.length) { workflowSection.hidden = false; item.howItWorks.forEach((step) => { const box = document.createElement('span'); box.className = 'workflow-step'; box.textContent = step; workflowList.append(box); }); }
+            const processSection = document.querySelector('#case-process-improvements-section'); const processList = document.querySelector('#case-process-improvements');
+            if (processSection && processList && Array.isArray(item.processImprovements) && item.processImprovements.length) { processSection.hidden = false; item.processImprovements.forEach((line) => { const li = document.createElement('li'); li.textContent = line; processList.append(li); }); }
+            const featuresSection = document.querySelector('#case-features-section'); const featuresList = document.querySelector('#case-key-features');
+            if (featuresSection && featuresList && Array.isArray(item.keyFeatures) && item.keyFeatures.length) { featuresSection.hidden = false; item.keyFeatures.forEach((feature) => { const li = document.createElement('li'); li.textContent = feature; featuresList.append(li); }); }
+            const techSection = document.querySelector('#case-tech-section'); const techList = document.querySelector('#case-technologies');
+            if (techSection && techList && Array.isArray(item.technologies) && item.technologies.length) { techSection.hidden = false; item.technologies.forEach((tech) => { const chip = document.createElement('span'); chip.className = 'tech-chip'; chip.textContent = tech; techList.append(chip); }); }
+            renderStatGrid(document.querySelector('#case-scale-metrics'), item.scaleMetrics);
+            const scaleSection = document.querySelector('#case-scale-section'); if (scaleSection && Array.isArray(item.scaleMetrics) && item.scaleMetrics.length) scaleSection.hidden = false;
+            const beforeAfterSection = document.querySelector('#case-before-after-section'); const beforeList = document.querySelector('#case-before'); const afterList = document.querySelector('#case-after');
+            if (beforeAfterSection && beforeList && afterList && ((Array.isArray(item.beforeState) && item.beforeState.length) || (Array.isArray(item.afterState) && item.afterState.length))) { beforeAfterSection.hidden = false; (item.beforeState || []).forEach((line) => { const li = document.createElement('li'); li.textContent = line; beforeList.append(li); }); (item.afterState || []).forEach((line) => { const li = document.createElement('li'); li.textContent = line; afterList.append(li); }); }
             const cover = document.querySelector('#case-cover'); if (item.coverImageUrl) { cover.src = item.coverImageUrl; cover.alt = item.title; cover.hidden = false; const hero = document.querySelector('.case-study-hero'); if (hero) hero.classList.add('has-cover'); }
             const gallery = document.querySelector('#case-gallery');
             if (gallery && Array.isArray(item.galleryImages) && item.galleryImages.length) {
@@ -467,6 +572,13 @@ function formatArticleContent(raw) {
 
         document.querySelector('#article-title').textContent =
             post.title;
+
+        // Bug fix: without this, every article shared the listing page's
+        // static "Insights | Imadi Technologies" <title> unless an admin
+        // happened to set a manual SEO title override, so most blog posts
+        // were indistinguishable from each other and from /insights/ in
+        // browser tabs, history, and shared links.
+        document.title = `${post.title} | Imadi Technologies`;
 
         document.querySelector('#article-excerpt').textContent =
             post.excerpt || '';

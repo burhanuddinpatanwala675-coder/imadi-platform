@@ -380,6 +380,22 @@ form textarea {
     resize: vertical
 }
 
+/* A plain checkbox + inline label, e.g. "Feature this case study
+   prominently" — overrides the block/full-width input styling above
+   (meant for text inputs) so the checkbox renders at its natural size
+   next to its label text instead of stretching to the field's full width. */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-label input {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
