@@ -135,47 +135,6 @@
             }
         }
 
-        .home-note {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
-        }
-
-        .home-note h2 {
-            margin-top: 12px;
-        }
-
-        .home-note p {
-            color: var(--muted);
-            max-width: 570px;
-        }
-
-        .principles {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            align-items: start;
-        }
-
-        .principle {
-            padding: 18px 20px;
-            border: 1px solid var(--line);
-            border-radius: 15px;
-            background: rgba(13, 28, 48, .42);
-        }
-
-        .principle strong {
-            display: block;
-            font: 700 1rem var(--display);
-        }
-
-        .principle span {
-            display: block;
-            margin-top: 3px;
-            color: var(--muted);
-            font-size: .86rem;
-        }
-
         .home-cta {
             padding: 28px 32px;
             display: flex;
@@ -209,24 +168,7 @@
         .founder-name { font-weight: 700; font-size: 1.15rem; color: #e8f1fb; margin-top: 14px; }
         .founder-name + .founder-name { margin-top: 4px; }
         .founder-name span { color: var(--muted); font-weight: 500; }
-        .outcome-grid { grid-template-columns: repeat(4, 1fr); }
-        .outcome-grid .card { min-height: 190px; position: relative; }
-
-        @media (min-width: 981px) {
-            .outcome-grid .card:not(:last-child)::after {
-                content: "→";
-                position: absolute;
-                top: 50%;
-                right: -22px;
-                transform: translateY(-50%);
-                color: var(--cyan);
-                font-size: 1.3rem;
-                font-weight: 700;
-            }
-        }
-
         @media (max-width: 980px) {
-            .outcome-grid { grid-template-columns: repeat(2, 1fr); }
             .founder-grid { grid-template-columns: 1fr; }
         }
 
@@ -237,8 +179,6 @@
             }
 
             .capabilities,
-            .home-note,
-            .principles,
             .automate-grid {
                 grid-template-columns: 1fr;
             }
@@ -248,7 +188,6 @@
                 flex-direction: column;
             }
 
-            .outcome-grid { grid-template-columns: 1fr; }
             .founder-portrait { min-height: 260px; }
         }
     </style>
@@ -442,45 +381,6 @@
                         <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <button class="btn primary" type="submit">Subscribe</button><p id="newsletter-status" class="form-status" role="status"></p>
                     </form>
-                </div>
-            </section>
-
-        <section class="section">
-            <div class="wrap home-note">
-                <div class="reveal">
-                    <div class="eyebrow">Why Imadi</div>
-                    <h2>Why businesses choose Imadi.</h2>
-                    <p>We start with the reality of your organisation, then work alongside your team to turn the right
-                        opportunities into durable, well-made technology.</p>
-                </div>
-                <div class="principles reveal">
-                    <div class="principle"><strong>AI-first, not AI-for-show</strong><span>We identify where
-                            intelligence actually creates business value.</span></div>
-                    <div class="principle"><strong>Built around your workflow</strong><span>We adapt technology to the
-                            business rather than forcing the business into a tool.</span></div>
-                    <div class="principle"><strong>Engineering + product thinking</strong><span>We don't stop at
-                            prototypes.</span></div>
-                    <div class="principle"><strong>Secure from day one</strong><span>Security, reliability and
-                            maintainability are part of the architecture.</span></div>
-                    <div class="principle"><strong>Built to evolve</strong><span>Systems can grow with the
-                            organisation.</span></div>
-                </div>
-            </div>
-        </section>
-
-            <section class="section">
-                <div class="wrap">
-                    <div class="section-head reveal">
-                        <div class="eyebrow">From problem to impact</div>
-                        <h2>We build around outcomes, not buzzwords.</h2>
-                        <p>Every engagement starts with the problem, the workflow, and the outcome you want. Then we choose the right combination of AI, automation, software and infrastructure.</p>
-                    </div>
-                    <div class="grid capabilities outcome-grid">
-                        <div class="card reveal"><h3>01 · Understand</h3><p>We learn how your business currently works and where friction exists.</p></div>
-                        <div class="card reveal"><h3>02 · Identify</h3><p>We identify opportunities where automation, AI, or better software can create meaningful value.</p></div>
-                        <div class="card reveal"><h3>03 · Build</h3><p>We design and develop a practical solution around your actual workflows.</p></div>
-                        <div class="card reveal"><h3>04 · Improve</h3><p>We measure, refine, and evolve the system as your business changes.</p></div>
-                    </div>
                 </div>
             </section>
 
