@@ -21,6 +21,12 @@
         .before-after-list li::before { content: "–"; position: absolute; left: 0; }
         .before-after-col.is-after .before-after-list li { color: var(--ink); }
         .before-after-col.is-after .before-after-list li::before { content: "✓"; color: var(--green); font-weight: 700; }
+        .case-body { display: block; }
+        .case-section { padding: 40px 0; border-top: 1px solid var(--line); }
+        .case-section:first-of-type { border-top: none; }
+        .case-section h2 { font: 700 1.5rem "Space Grotesk", sans-serif; margin: 0 0 14px; }
+        .case-section p { color: #cdd9ec; max-width: 720px; }
+        .case-note { color: var(--muted); font-style: italic; }
     </style>
 </head>
 <body><header class="nav"><div class="wrap navin"><a class="brand" href="/"><img class="brand-logo" src="/assets/imadi-logo.jpg" alt="Imadi Technologies"></a><nav class="navlinks" aria-label="Main navigation"><a href="/">Home</a><a href="/case-studies/">Case studies</a></nav><a class="btn primary call" href="/contact/">Contact Us</a><button class="menu" aria-label="Toggle menu" aria-expanded="false">☰</button></div></header>
@@ -37,17 +43,17 @@
     </section>
     <section class="section">
         <div class="wrap card article-content case-body">
-            <section><h2>Challenge</h2><p id="case-challenge"></p></section>
-            <section id="case-opportunity-section" hidden><h2>Opportunity</h2><p id="case-opportunity"></p></section>
-            <section><h2>Solution</h2><p id="case-solution"></p></section>
-            <section id="case-how-it-works-section" hidden><h2>How It Works</h2><div class="workflow-steps" id="case-how-it-works"></div></section>
-            <section id="case-process-improvements-section" hidden><h2>Workflow Improvements</h2><ul class="feature-list" id="case-process-improvements"></ul></section>
-            <section id="case-tech-section" hidden><h2>Technology</h2><div class="tech-list" id="case-technologies"></div></section>
-            <section id="case-features-section" hidden><h2>Key Features</h2><ul class="feature-list" id="case-key-features"></ul></section>
-            <section id="case-scale-section" hidden><h2>Project Scale</h2><div class="stat-grid" id="case-scale-metrics"></div></section>
-            <section id="case-before-after-section" hidden><h2>Before &amp; After</h2><div class="before-after-grid"><div class="before-after-col is-before"><h4>Before</h4><ul class="before-after-list" id="case-before"></ul></div><div class="before-after-col is-after"><h4>After</h4><ul class="before-after-list" id="case-after"></ul></div></div></section>
-            <section><h2>Impact</h2><div class="stat-grid" id="case-impact-metrics" hidden></div><p class="impact-highlight" id="case-impact" hidden></p><p id="case-outcomes"></p></section>
-            <section id="case-whats-next-section" hidden><h2>Future Potential</h2><p id="case-whats-next"></p></section>
+            <section class="case-section"><h2>01. The Challenge</h2><p id="case-challenge"></p></section>
+            <section class="case-section" id="case-opportunity-section"><h2>02. Opportunity</h2><p id="case-opportunity"></p></section>
+            <section class="case-section"><h2>03. The Solution</h2><p id="case-solution"></p></section>
+            <section class="case-section" id="case-how-it-works-section"><h2>04. How It Works</h2><div class="workflow-steps" id="case-how-it-works"></div></section>
+            <section class="case-section" id="case-process-improvements-section"><h2>05. Workflow Improvements</h2><ul class="feature-list" id="case-process-improvements"></ul></section>
+            <section class="case-section" id="case-tech-section"><h2>06. Technology</h2><div class="tech-list" id="case-technologies"></div></section>
+            <section class="case-section" id="case-features-section"><h2>07. Key Features</h2><ul class="feature-list" id="case-key-features"></ul></section>
+            <section class="case-section" id="case-scale-section"><h2>08. Project Scale</h2><div class="stat-grid" id="case-scale-metrics"></div></section>
+            <section class="case-section" id="case-before-after-section"><h2>09. Before &amp; After</h2><div class="before-after-grid"><div class="before-after-col is-before"><h4>Before</h4><ul class="before-after-list" id="case-before"></ul></div><div class="before-after-col is-after"><h4>After</h4><ul class="before-after-list" id="case-after"></ul></div></div></section>
+            <section class="case-section"><h2>10. Impact &amp; Outcomes</h2><div class="stat-grid" id="case-impact-metrics" hidden></div><p class="impact-highlight" id="case-impact" hidden></p><p id="case-outcomes"></p></section>
+            <section class="case-section" id="case-whats-next-section"><h2>11. Future Potential</h2><p id="case-whats-next"></p></section>
         </div>
         <div class="wrap case-gallery-grid" id="case-gallery" hidden></div>
     </section>
