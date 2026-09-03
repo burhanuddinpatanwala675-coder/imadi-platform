@@ -1,0 +1,27 @@
+# Imadi Technologies
+
+> Imadi Technologies builds custom software and AI-assisted automation for growing
+> businesses, and also builds its own products — starting with Maflow, a business
+> management platform for growing companies.
+
+## Products
+
+- [Maflow](https://imadi-technologies.com/products/): Business management SaaS — quotations, delivery challans, invoices, sales tax invoices, purchases, customers, suppliers, products, payments, expenses, and a running ledger in one workspace.
+- [Products overview](https://imadi-technologies.com/products/): All Imadi products and client-built systems, including Maflow, ALICO Business Suite, Imadi Logistics ERP, ReNaz, and the Child-Friendly City Index prototype.
+
+## Company
+
+- [About](https://imadi-technologies.com/about/): Who Imadi Technologies is and how the team works.
+- [Solutions](https://imadi-technologies.com/solutions/): Custom software and automation solutions built for clients.
+- [Expertise](https://imadi-technologies.com/expertise/): Technical expertise and capabilities.
+- [Process](https://imadi-technologies.com/process/): How Imadi approaches a project from start to finish.
+- [How We Build](https://imadi-technologies.com/how-we-build/): The team's build methodology.
+- [Case Studies](https://imadi-technologies.com/case-studies/): Real client projects, challenges, and outcomes.
+- [Insights](https://imadi-technologies.com/insights/): Articles and editorial content.
+- [Careers](https://imadi-technologies.com/careers/): Open roles at Imadi Technologies.
+- [Contact](https://imadi-technologies.com/contact/): Get in touch with the team.
+
+## Tools
+
+- [ROI Calculator](https://imadi-technologies.com/roi-calculator/): Estimate the return on investment of an automation project.
+- [AI Readiness Assessment](https://imadi-technologies.com/assessment/): A short assessment of AI/automation readiness.
