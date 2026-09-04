@@ -2070,10 +2070,17 @@ app.use(
             err instanceof ZodError
         ) {
 
+            const details = err.issues
+                .map((issue) => {
+                    const field = issue.path.join('.') || '(root)';
+                    return `${field}: ${issue.message}`;
+                })
+                .join('; ');
+
             return fail(
                 res,
                 'VALIDATION_ERROR',
-                'Invalid request.',
+                `Invalid request — ${details}`,
                 422
             );
 
