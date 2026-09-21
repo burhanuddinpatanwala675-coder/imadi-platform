@@ -253,7 +253,7 @@ const contactSchema = z.object({
     companyName: text,
     phoneNumber: z.string().max(50).optional(),
     projectType: text,
-    budgetRange: z.string().max(120).optional(),
+    budgetRange: z.string().trim().min(1).max(120).transform(clean),
     message: z.string().trim().min(10).max(5000).transform(clean),
     sourcePage: z.string().max(512).default('/'),
     website: z.string().trim().max(300).optional(),

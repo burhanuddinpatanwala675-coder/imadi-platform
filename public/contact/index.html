@@ -75,14 +75,8 @@
                                 id="message" name="message" required
                                 placeholder="What are you looking to improve, create, or solve?"></textarea></div>
                         <div class="field full"><label for="toolsUsed">Which tools or systems do you currently use? <span class="optional">(optional)</span></label><input id="toolsUsed" name="toolsUsed" placeholder="e.g. spreadsheets, Salesforce, WhatsApp"></div>
-                        <div class="field"><label for="budget">Budget range <span class="optional">(optional)</span></label>
-                            <select id="budget" name="budget">
-                                <option value="">Select budget range</option>
-                                <option value="$1k-$5k">$1k - $5k</option>
-                                <option value="$5k-$10k">$5k - $10k</option>
-                                <option value="$10k-$25k">$10k - $25k</option>
-                                <option value="$25k+">$25k+</option>
-                            </select>
+                        <div class="field"><label for="budget">Budget range</label>
+                            <input id="budget" name="budget" type="text" required maxlength="120" placeholder="e.g. $5,000 or PKR 500,000">
                         </div>
                         <div class="field"><label for="timeline">Timeline <span class="optional">(optional)</span></label><input id="timeline" name="timeline" placeholder="e.g. within 3 months"></div>
                         <p class="consent">By submitting, you agree that Imadi Technologies may contact you about your
