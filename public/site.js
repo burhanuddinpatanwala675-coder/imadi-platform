@@ -343,7 +343,7 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
 (() => {
     // Homepage "Built Around Real Business Problems" proof section: pulls
     // published case studies from the CMS (added via the admin dashboard)
-    // and shows up to 6, each with its real industry, challenge, what was
+    // and shows up to 3, each with its real industry, challenge, what was
     // built, key technologies and outcome. The section starts hidden and
     // only reveals once there's real published work to show, so nothing
     // fabricated or empty is ever displayed before an admin adds a real
@@ -357,7 +357,14 @@ const observer = new IntersectionObserver(entries => entries.forEach(e => { if (
         try {
             const response = await fetch(`${await apiBase()}/api/case-studies`); const result = await response.json();
             if (!response.ok || !result.success) throw new Error();
-            const items = result.data.items.slice(0, 6);
+            // Excluded from the homepage highlight reel by request, while staying
+            // fully published on /case-studies/ and its own case study page.
+            // Matched on slug or title (case-insensitive substring) so this still
+            // works regardless of the exact slug the admin dashboard generated.
+            const HOMEPAGE_EXCLUDED = ['alico'];
+            const isExcluded = (item) => HOMEPAGE_EXCLUDED.some((needle) =>
+                (item.slug || '').toLowerCase().includes(needle) || (item.title || '').toLowerCase().includes(needle));
+            const items = result.data.items.filter((item) => !isExcluded(item)).slice(0, 3);
             if (!items.length) return;
             list.replaceChildren();
             items.forEach((item) => {
