@@ -1677,6 +1677,51 @@ app.patch(
 );
 
 
+app.delete(
+    '/api/admin/inquiries/:id',
+    csrf,
+    requireAuth([
+        AdminRole.super_admin,
+        AdminRole.sales,
+    ]),
+
+    async (
+        req: AuthRequest,
+        res,
+        next
+    ) => {
+
+        try {
+
+            await prisma.contactInquiry.delete({
+                where: {
+                    id: String(req.params.id)
+                },
+            });
+
+
+            await audit(
+                req,
+                'inquiry.deleted',
+                'ContactInquiry',
+                String(req.params.id)
+            );
+
+
+            success(
+                res,
+                { deleted: true }
+            );
+
+
+        } catch (e) {
+            next(e);
+        }
+
+    }
+);
+
+
 const caseStudySchema = z.object({
     title: text,
     slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(140),
