@@ -1860,6 +1860,7 @@ app.patch('/api/admin/settings', csrf, requireAuth([AdminRole.super_admin]), asy
                 // AI Lab section — each stays hidden on the site until set here.
                 maflowUrl: socialLinkUrl,
                 cfcIndexUrl: socialLinkUrl,
+                hercommerceUrl: socialLinkUrl,
                 alicoUrl: socialLinkUrl,
                 erpUrl: socialLinkUrl,
                 renazUrl: socialLinkUrl,

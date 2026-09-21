@@ -101,6 +101,7 @@ function withWakeUpNotice(statusEl, message = 'Connecting to Imadi services — 
             // selector — everything else uses a single id.
             maflowUrl: '.js-maflow-link',
             cfcIndexUrl: '#cfc-prototype-link',
+            hercommerceUrl: '#hercommerce-link',
             alicoUrl: '#alico-link',
             erpUrl: '#erp-link',
             renazUrl: '#renaz-link',
