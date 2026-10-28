@@ -7,7 +7,7 @@
 ## Products
 
 - [Maflow](https://imadi-technologies.com/products/): Business management SaaS — quotations, delivery challans, invoices, sales tax invoices, purchases, customers, suppliers, products, payments, expenses, and a running ledger in one workspace.
-- [Products overview](https://imadi-technologies.com/products/): All Imadi products and client-built systems, including Maflow, ALICO Business Suite, Imadi Logistics ERP, ReNaz, and the Child-Friendly City Index prototype.
+- [Products overview](https://imadi-technologies.com/products/): All Imadi products and client-built systems, including Maflow, HerCommerce, and Imadi Logistics ERP.
 
 ## Company
 
