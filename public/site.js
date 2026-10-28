@@ -88,9 +88,7 @@ function withWakeUpNotice(statusEl, message = 'Connecting to Imadi services — 
         const socialLinkTargets = {
             linkedin: '#linkedin-link',
             x: '#x-link',
-            linkedinFounder: '#founder-linkedin-link',
             linkedinCofounder: '#cofounder-linkedin-link',
-            portfolioFounder: '#founder-avatar-link',
             portfolioCofounder: '#cofounder-avatar-link',
             instagram: '#instagram-link',
             facebook: '#facebook-link',
@@ -100,11 +98,9 @@ function withWakeUpNotice(statusEl, message = 'Connecting to Imadi services — 
             // Maflow appears twice on the Products page, hence the shared class
             // selector — everything else uses a single id.
             maflowUrl: '.js-maflow-link',
-            cfcIndexUrl: '#cfc-prototype-link',
             hercommerceUrl: '#hercommerce-link',
-            alicoUrl: '#alico-link',
+            salesEngineUrl: '#sales-engine-link',
             erpUrl: '#erp-link',
-            renazUrl: '#renaz-link',
         };
         Object.entries(socialLinkTargets).forEach(([key, selector]) => {
             const url = settings.socialLinks?.[key];
